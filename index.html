@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HabitUp - Evolua seus Hábitos</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- CABEÇALHO -->
+  <header class="header">
+    <h1>Habit<span>Up</span></h1>
+  </header>
+
+  <!-- SEÇÃO INTRODUTÓRIA (simplificada) -->
+  <section class="intro-section">
+    <div class="intro-content">
+      <!-- Título principal -->
+      <h2>Transforme Seus Hábitos Agora</h2>
+  
+      <!-- Texto curto, porém motivador e descritivo -->
+      <p>
+        Seja bem-vindo(a) ao <strong>HabitUp</strong>, seu sistema de 
+        <em>evolução pessoal</em> baseado em metas diárias e conquistas. 
+        Trace seus objetivos, ganhe <em>XP</em> a cada progresso e suba 
+        de nível rumo à produtividade máxima!
+      </p>
+  
+      <!-- Botão de chamada para ação (Novo ID) -->
+      <button class="btn btn-primary cta-button" id="startNowBtn">
+        Começar Agora
+      </button>
+    </div>
+  </section>
+  
+  <!-- CONTAINER PRINCIPAL -->
+  <main class="app">
+
+    <!-- SEÇÃO DE HÁBITOS -->
+    <section class="habits-section">
+      <div class="habits-header">
+        <h2>Meus Hábitos</h2>
+        <button id="addHabitBtn" class="btn btn-primary">+ Criar Hábito</button>
+      </div>
+      <ul id="habitsList" class="habits-list">
+        <!-- Lista de hábitos aparece aqui -->
+      </ul>
+    </section>
+
+    <!-- SEÇÃO DE PROGRESSO (XP / NÍVEL / MASCOTE) -->
+    <section class="progress-section">
+      <div class="progress-container">
+        <h2 class="xp-title">Seu Progresso</h2>
+        <!-- Novo: Exibe nome do usuário acima do nível -->
+        <h4 id="userNameDisplay" class="user-name hidden"></h4>
+
+        <div class="mascot-container">
+          <img id="mascotImg" 
+               src="https://cdn-icons-png.flaticon.com/512/747/747376.png" 
+               alt="Mascote do HabitUp" />
+        </div>
+        <h3>Nível <span id="levelValue">1</span></h3>
+        <div class="xp-bar">
+          <div id="xpProgress" class="xp-progress"></div>
+        </div>
+        <p class="xp-values">
+          <span id="currentXp">0</span> / <span id="xpToNextLevel">50</span> XP
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- SEÇÃO DE LINKS (RODAPÉ) -->
+  <footer class="links-section">
+    <h2>Mais Projetos</h2>
+    <p>Confira outros trabalhos e ideias:</p>
+    <ul class="links-list">
+      <li><a href="#" target="_blank">Projeto 1</a></li>
+      <li><a href="#" target="_blank">Projeto 2</a></li>
+      <li><a href="#" target="_blank">Projeto 3</a></li>
+    </ul>
+  </footer>
+
+  <!-- MODAL DE CRIAÇÃO/EDIÇÃO DE HÁBITO (NÃO ALTERADO) -->
+  <div id="habitModal" class="modal hidden">
+    <div class="modal-content">
+      <h3 id="modalTitle">Novo Hábito</h3>
+
+      <label for="habitName">Nome do Hábito</label>
+      <input type="text" id="habitName" placeholder="Ex: Beber 2L de água" />
+
+      <label for="habitIcon">Ícone/Emoji (opcional)</label>
+      <input type="text" id="habitIcon" placeholder="Ex: 💧" />
+
+      <label for="habitGoal">Meta Diária (quantidade)</label>
+      <input type="number" min="1" id="habitGoal" placeholder="Ex: 8" />
+
+      <div class="modal-buttons">
+        <button id="saveHabitBtn" class="btn btn-primary">Salvar</button>
+        <button id="cancelModalBtn" class="btn btn-secondary">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOVO MODAL DE BOAS-VINDAS, SEM INTERFERIR NO DE HÁBITOS -->
+  <div id="welcomeModal" class="welcome-modal hidden">
+    <div class="welcome-modal-content">
+      <h3>Boas-Vindas ao HabitUp!</h3>
+      <p>
+        Para começar, digite seu nome abaixo. Depois, veja algumas 
+        dicas de hábitos saudáveis para ter uma vida melhor.
+      </p>
+
+      <!-- Novo campo para nome do usuário -->
+      <label for="userNameField">Seu Nome:</label>
+      <input type="text" id="userNameField" placeholder="Ex: João" />
+
+      <ul>
+        <li><strong>Hidratação:</strong> Beba ao menos 2L de água por dia.</li>
+        <li><strong>Exercícios:</strong> Movimente-se 30 minutos diariamente.</li>
+        <li><strong>Alimentação:</strong> Consuma frutas, legumes e proteínas magras.</li>
+        <li><strong>Sono:</strong> Tente dormir de 7 a 8 horas por noite.</li>
+        <li><strong>Pausa Digital:</strong> Reserve momentos sem telas ou redes sociais.</li>
+      </ul>
+
+      <button class="btn btn-secondary" id="confirmWelcomeBtn">Confirmar</button>
+    </div>
+  </div>
+
+  <!-- OVERLAY PARA MODAIS -->
+  <div id="overlay" class="overlay hidden"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
