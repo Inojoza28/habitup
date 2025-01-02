@@ -48,10 +48,11 @@ let userName = ''; // armazena o nome do usuário
 
 /** ====== INICIALIZAÇÃO ====== */
 document.addEventListener('DOMContentLoaded', () => {
-  loadData();           // carrega habits, xp, level, userName
+  loadData();           
+  resetDailyProgressIfNeeded();  // <--- Nova função para zerar progress se o dia mudou
   renderHabits();       
   updateXpUI();
-  checkUserName();      // verifica se já existe userName
+  checkUserName();      
 });
 
 /** ====== EVENTOS ====== */
@@ -70,13 +71,13 @@ overlay.addEventListener('click', () => {
   }
 });
 
-// Novo: Botão "Começar Agora" abre modal de boas-vindas
+// Botão "Começar Agora" abre modal de boas-vindas
 startNowBtn.addEventListener('click', () => {
   welcomeModal.classList.remove('hidden');
   overlay.classList.remove('hidden');
 });
 
-// Novo: Confirmar nome no modal de boas-vindas
+// Confirmar nome no modal de boas-vindas
 confirmWelcomeBtn.addEventListener('click', confirmUserName);
 
 /** ====== MODAL DE HÁBITO (ANTIGO) ====== */
@@ -104,7 +105,7 @@ function closeHabitModal() {
   overlay.classList.add('hidden');
 }
 
-/** ====== MODAL DE BOAS-VINDAS (NOVO) ====== */
+/** ====== MODAL DE BOAS-VINDAS ====== */
 function closeWelcomeModal() {
   welcomeModal.classList.add('hidden');
   overlay.classList.add('hidden');
@@ -292,6 +293,26 @@ function renderHabits() {
   });
 }
 
+/** ====== FUNÇÃO PARA RESETAR O PROGRESSO SE O DIA MUDOU ====== */
+function resetDailyProgressIfNeeded() {
+  const todayStr = getTodayStr();
+  let updated = false;
+
+  habits.forEach(habit => {
+    if (habit.lastCheckDate !== todayStr) {
+      // Zera o progress, removendo a cor "verde"
+      habit.progress = 0;
+      updated = true;
+    }
+  });
+
+  if (updated) {
+    saveData();
+    // Chamamos renderHabits() para atualizar a cor
+    renderHabits();
+  }
+}
+
 /** ====== INCREMENTAR PROGRESSO & STREAK ====== */
 function incrementProgress(habitId) {
   const habit = habits.find(h => h.id === habitId);
@@ -335,6 +356,7 @@ function getTodayStr() {
   const d = new Date();
   return d.toISOString().slice(0,10);
 }
+
 function isYesterday(lastDateStr, todayStr) {
   if (!lastDateStr) return false;
   const last = new Date(lastDateStr);

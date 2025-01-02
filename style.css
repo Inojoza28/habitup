@@ -485,6 +485,7 @@ img {
   transform: translate(-50%, -50%);
   background: var(--color-panel);
   width: 90%;
+  padding: 2rem;
   max-width: 400px;
   border-radius: var(--radius-base);
   z-index: 1001;
@@ -497,11 +498,37 @@ img {
   to   {transform: translate(-50%, -50%);}
 }
 
-.modal-content {
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
+.modal-content input {
+  display: block;
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  margin-bottom: 0.8rem;  /* espaço inferior para separação */
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-body);
+  color: var(--color-text);
+  background-color: var(--color-white);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.modal-content input::placeholder {
+  color: #aaa; /* cor do placeholder */
+}
+
+.modal-content input:focus {
+  outline: none; /* remove contorno padrão */
+  border-color: var(--color-primary); /* realce na cor principal */
+  box-shadow: 0 0 3px rgba(74, 111, 161, 0.3);
+}
+
+/* Ajuste de label e spacing */
+.modal-content label {
+  font-size: var(--fs-sm);
+  color: var(--color-text);
+  display: block; 
+  margin-bottom: 0.3rem;
+  margin-top: 0.8rem; 
+  /* cria espaço antes do label, de modo que cada label fique um pouco separado */
 }
 
 .modal-content h3 {
@@ -630,5 +657,76 @@ img {
   .welcome-modal-content p,
   .welcome-modal-content li {
     font-size: 0.9rem;
+  }
+}
+
+/* =================================
+   MENSAGEM PARA TELAS > 720px
+================================= */
+
+/* Por padrão, ocultamos a mensagem e mostramos a aplicação */
+.desktop-message {
+  display: none;
+}
+.app-wrapper {
+  display: block; /* A aplicação é normal */
+}
+
+/* Card interno da mensagem desktop */
+.desktop-message-content {
+  background: linear-gradient(135deg, #fdfdfd, #eaeaea);
+  border-radius: var(--radius-base);
+  box-shadow: var(--shadow-base);
+  max-width: 500px;
+  margin: 10vh auto; /* centraliza verticalmente (relativo à viewport) */
+  text-align: center;
+  padding: 2rem;
+}
+
+.desktop-message-content h1 {
+  font-size: 1.8rem;
+  color: var(--color-primary);
+  margin-bottom: 1rem;
+  letter-spacing: 1px;
+}
+.desktop-message-content h1 span {
+  color: var(--color-secondary);
+}
+
+.desktop-message-content p {
+  font-size: var(--fs-body);
+  color: var(--color-text);
+  line-height: 1.4;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+/* ========== MEDIA QUERIES ========== */
+/* Se a largura for acima de 720px, exibimos a mensagem e ocultamos a aplicação */
+@media (min-width: 721px) {
+
+  body{
+    background: #555;
+  }
+
+  .desktop-message {
+    display: block; /* mostra o bloco */
+    background: var(--color-bg); /* fundo "site" */
+    min-height: 100vh; /* ocupa tela inteira */
+    padding: 1rem;
+  }
+
+  .app-wrapper {
+    display: none !important; /* esconde toda a aplicação */
+  }
+}
+
+/* Para telas até 720px, exibimos a aplicação normalmente */
+@media (max-width: 720px) {
+  .desktop-message {
+    display: none;
+  }
+  .app-wrapper {
+    display: block;
   }
 }
