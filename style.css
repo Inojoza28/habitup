@@ -466,12 +466,12 @@ img {
 }
 
 .btn-secondary {
-  background: #b3b3b3;
+  background: #e7b220;
   color: var(--color-white);
 }
 
 .btn-secondary:hover {
-  background: #d0d0d0;
+  background: #ecba2e;
   color: var(--color-text);
 }
 
