@@ -408,7 +408,7 @@ img {
    LINKS SECTION (Rodapé)
 ======================== */
 .links-section {
-  margin: 1rem;
+  margin: 1.2rem;
   text-align: center;
 }
 
@@ -443,6 +443,24 @@ img {
   color: var(--color-secondary);
 }
 
+/* ========================
+   SIMPLE FOOTER (Rodapé Simples)
+======================== */
+.simple-footer {
+  background-color: var(--color-primary); /* Barra azul */
+  color: #ffffff; /* Texto branco para contraste */
+  text-align: center;
+  padding: 15px; /* Espaçamento vertical */
+  font-size: var(--fs-body);
+  position: relative;
+  width: 100%;
+  bottom: 0;
+}
+
+.simple-footer p {
+  margin: 0;
+  font-weight: bold;
+}
 /* ========================
    BOTÕES
 ======================== */
