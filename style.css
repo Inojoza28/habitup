@@ -87,7 +87,7 @@ img {
   border-radius: var(--radius-base);
   box-shadow: var(--shadow-base);
   padding: 1rem;
-  margin: 1rem;
+  margin: 0.8rem;
 }
 
 .intro-section {
