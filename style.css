@@ -450,7 +450,7 @@ img {
   background-color: var(--color-primary); /* Barra azul */
   color: #ffffff; /* Texto branco para contraste */
   text-align: center;
-  padding: 15px; /* Espaçamento vertical */
+  padding: 20px; /* Espaçamento vertical */
   font-size: var(--fs-body);
   position: relative;
   width: 100%;
