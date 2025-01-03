@@ -142,7 +142,7 @@ function checkUserName() {
 /** ====== SALVAR HÁBITO ====== */
 function saveHabit() {
   const name = habitNameInput.value.trim();
-  const icon = habitIconInput.value.trim() || '✔️';
+  const icon = habitIconInput.value.trim() || '📌';
   const goal = parseInt(habitGoalInput.value.trim()) || 1;
 
   if (!name) {
