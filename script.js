@@ -1,8 +1,9 @@
 /******************************************************
  *  RASTREADOR DE HÁBITOS GAMIFICADO - HabitUp
  *  
- *  (Streak, progress, reset diário à meia-noite local,
- *   drag-and-drop com placeholder, campo de nome do usuário, etc.)
+ *  (Streak e bestStreak APENAS quando o hábito é 
+ *   totalmente concluído no dia, reset diário no local,
+ *   drag-and-drop com placeholder, vibração, etc.)
  ******************************************************/
 
 // Botão Criar Hábito (modal antigo)
@@ -46,7 +47,7 @@ const mascotImg = document.getElementById('mascotImg');
  *     progress, 
  *     streak, 
  *     bestStreak, 
- *     lastCheckDate  // <-- agora armazenamos 'YYYY-MM-DD' local
+ *     lastCheckDate
  *   },
  * ]
  */
@@ -180,7 +181,7 @@ function saveHabit() {
       progress: 0,
       streak: 0,
       bestStreak: 0,
-      lastCheckDate: ''  // ainda vazio, será setado no increment
+      lastCheckDate: ''
     };
     habits.push(newHabit);
   }
@@ -220,7 +221,7 @@ function renderHabits() {
       placeholderEl = null;
     });
 
-    // Verifica se o hábito está completo
+    // Se o hábito foi concluído hoje, marca "verde"
     if (habit.progress >= habit.goal) {
       li.classList.add('completed-today');
     } else {
@@ -287,7 +288,7 @@ function renderHabits() {
     topDiv.appendChild(infoDiv);
     topDiv.appendChild(actionsDiv);
 
-    // Detalhes (barra de progresso, streak)
+    // Detalhes (barra de progresso, streak, etc.)
     const detailsDiv = document.createElement('div');
     detailsDiv.className = 'habit-details';
 
@@ -331,11 +332,10 @@ function renderHabits() {
 
 // Dragover na lista
 habitsList.addEventListener('dragover', (e) => {
-  e.preventDefault(); 
+  e.preventDefault();
   const draggedItem = document.querySelector('.habit-item.dragging');
   if (!draggedItem || !placeholderEl) return;
 
-  // Definir onde inserir a placeholder
   const afterElement = getDragAfterElement(habitsList, e.clientY);
   if (!afterElement) {
     habitsList.appendChild(placeholderEl);
@@ -358,9 +358,8 @@ habitsList.addEventListener('drop', (e) => {
   placeholderEl = null;
 });
 
-/** 
- * Define o local de inserção da placeholder 
- * com base na posição do mouse (y).
+/**
+ * Calcula o elemento "afterElement" de acordo com a posição do mouse (clientY).
  */
 function getDragAfterElement(container, y) {
   const items = [...container.querySelectorAll('.habit-item:not(.dragging):not(.placeholder)')];
@@ -379,8 +378,8 @@ function getDragAfterElement(container, y) {
   return closest;
 }
 
-/** 
- * Reordena array 'habits' com base em draggedHabitId e afterElement 
+/**
+ * Reordena o array 'habits' com base no draggedHabitId e no afterElement
  */
 function reorderHabits(draggedHabitId, afterElement) {
   const draggedIndex = habits.findIndex(h => h.id == draggedHabitId);
@@ -389,7 +388,6 @@ function reorderHabits(draggedHabitId, afterElement) {
   const [draggedItem] = habits.splice(draggedIndex, 1);
 
   if (!afterElement) {
-    // solta no fim
     habits.push(draggedItem);
   } else {
     const afterHabitId = afterElement.dataset.habitId;
@@ -401,14 +399,17 @@ function reorderHabits(draggedHabitId, afterElement) {
   renderHabits();
 }
 
-/** ====== FUNÇÃO PARA RESETAR PROGRESSO (DATA LOCAL) ====== */
+/** 
+ * Reset progress se o dia local mudou 
+ * (hábito não continua verde nem incrementa streak se não completou hoje)
+ */
 function resetDailyProgressIfNeeded() {
-  const todayStr = getLocalDateStr(); // data local "YYYY-MM-DD"
+  const todayStr = getLocalDateStr();
   let updated = false;
 
   habits.forEach(habit => {
     if (habit.lastCheckDate !== todayStr) {
-      // zera progress e volta cor normal
+      // Zera o progress e tira a cor
       habit.progress = 0;
       updated = true;
     }
@@ -420,38 +421,48 @@ function resetDailyProgressIfNeeded() {
   }
 }
 
-/** ====== INCREMENTAR PROGRESSO & STREAK ====== */
+/** 
+ * Increment progress APENAS COMPLETA O DIA se progress == goal
+ * para streak e bestStreak
+ */
 function incrementProgress(habitId) {
   const habit = habits.find(h => h.id == habitId);
   if (!habit) return;
 
+  // Se já completou hoje
   if (habit.progress >= habit.goal) {
     alert('Você já atingiu a meta deste hábito hoje!');
     return;
   }
 
-  // Pega data local para saber se é um novo dia
-  const todayStr = getLocalDateStr();
-  if (habit.lastCheckDate !== todayStr) {
-    // Se o dia anterior for "ontem" => streak++
-    if (isLocalYesterday(habit.lastCheckDate, todayStr)) {
-      habit.streak++;
-    } else {
-      habit.streak = 1;
-    }
-    habit.lastCheckDate = todayStr;
-  }
-
+  // Subimos partial progress?
   habit.progress++;
-  // bestStreak
-  if (habit.streak > habit.bestStreak) {
-    habit.bestStreak = habit.streak;
-  }
 
-  // XP normal
+  // Vibração curta (opcional)
+  vibrateShort();
+
+  // Ganha XP por cada incremento
   addXp(10);
-  // Bônus se completou a meta
-  if (habit.progress === habit.goal) {
+
+  // Se completou hoje (progress == goal), conta 1 dia
+  if (habit.progress >= habit.goal) {
+    const todayStr = getLocalDateStr();
+    // Se for outro dia comparado ao lastCheckDate, faz streak logic
+    if (habit.lastCheckDate !== todayStr) {
+      if (isLocalYesterday(habit.lastCheckDate, todayStr)) {
+        habit.streak++;
+      } else {
+        habit.streak = 1;
+      }
+      habit.lastCheckDate = todayStr;
+    }
+
+    // Atualiza bestStreak
+    if (habit.streak > habit.bestStreak) {
+      habit.bestStreak = habit.streak;
+    }
+
+    // Bônus se completou a meta
     addXp(10);
     runConfetti();
   }
@@ -460,7 +471,14 @@ function incrementProgress(habitId) {
   renderHabits();
 }
 
-/** ====== Funções de Data Local ====== */
+/** Exemplo de vibração curta */
+function vibrateShort() {
+  if ('vibrate' in navigator) {
+    navigator.vibrate(50); 
+  }
+}
+
+/** Funções auxiliares de data local */
 function getLocalDateStr() {
   // Retorna "YYYY-MM-DD" no fuso local
   const now = new Date();
@@ -471,12 +489,10 @@ function getLocalDateStr() {
 }
 
 function isLocalYesterday(lastDateStr, todayStr) {
-  // Se lastDateStr for "YYYY-MM-DD", podemos comparar se é "ontem"
   if (!lastDateStr) return false;
-  // Convertemos para Date e vemos a diferença
   const lastDate = new Date(lastDateStr + 'T00:00:00');
   const todayDate = new Date(todayStr + 'T00:00:00');
-  const diff = todayDate - lastDate; // em ms
+  const diff = todayDate - lastDate;
   return diff === 86400000; // 24h
 }
 
@@ -518,7 +534,7 @@ function updateXpUI() {
 
 function bounceMascot() {
   mascotImg.classList.remove('bounce');
-  void mascotImg.offsetWidth; // Força reflow
+  void mascotImg.offsetWidth; 
   mascotImg.classList.add('bounce');
 }
 
@@ -546,7 +562,7 @@ function runConfetti() {
     confetto.style.top = '0px';
     confetto.style.left = (Math.random() * 100) + '%';
     confetto.style.opacity = 0.8;
-    confetto.style.transform = `rotate(${Math.random() * 360}deg)`;
+    confetto.style.transform = `rotate(${Math.random()*360}deg)`;
 
     confettiContainer.appendChild(confetto);
 
@@ -565,7 +581,7 @@ function runConfetti() {
   }, 4000);
 }
 
-/** ====== SALVAR e CARREGAR do localStorage ====== */
+/** ====== SALVAR e CARREGAR localStorage ====== */
 function saveData() {
   const data = {
     habits,
