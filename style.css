@@ -720,6 +720,32 @@ img {
   margin: 0 auto;
 }
 
+/* Efeito Drag and Drop (Arrastar e soltar) */
+.habit-item.dragging {
+  opacity: 0.5;                 /* deixa translúcido */
+  border: 2px dashed var(--color-primary);
+  cursor: grabbing;             /* indica que está em movimento */
+  box-shadow: none;             /* remove sombra, se quiser */
+}
+
+.habit-item:not(.dragging) {
+  transition: transform 0.2s ease;
+  /* E se quiser deixá-los “empurrados” um pouco quando o mouse passar */
+}
+
+.habit-item[draggable="true"] {
+  cursor: move; /* Ou 'grab' se preferir */
+}
+
+.placeholder {
+  background: #fff9d6;
+  border: 2px dashed #ffd700;
+  margin: 0.4rem;
+}
+
+
+
+
 /* ========== MEDIA QUERIES ========== */
 /* Se a largura for acima de 720px, exibimos a mensagem e ocultamos a aplicação */
 @media (min-width: 721px) {

@@ -1,9 +1,8 @@
 /******************************************************
  *  RASTREADOR DE HÁBITOS GAMIFICADO - HabitUp
  *  
- *  (Com streak, bestStreak, barra de progresso, 
- *   reset diário, campo de nome do usuário, drag-and-drop 
- *   e agora com "placeholder" para melhor feedback visual)
+ *  (Streak, progress, reset diário à meia-noite local,
+ *   drag-and-drop com placeholder, campo de nome do usuário, etc.)
  ******************************************************/
 
 // Botão Criar Hábito (modal antigo)
@@ -47,7 +46,7 @@ const mascotImg = document.getElementById('mascotImg');
  *     progress, 
  *     streak, 
  *     bestStreak, 
- *     lastCheckDate 
+ *     lastCheckDate  // <-- agora armazenamos 'YYYY-MM-DD' local
  *   },
  * ]
  */
@@ -58,7 +57,7 @@ let level = 1;
 let editingHabitId = null;
 let userName = ''; // armazena o nome do usuário
 
-// Placeholder para ocupar espaço ao arrastar
+// Placeholder para drag-and-drop
 let placeholderEl = null;
 
 /** ====== INICIALIZAÇÃO ====== */
@@ -181,7 +180,7 @@ function saveHabit() {
       progress: 0,
       streak: 0,
       bestStreak: 0,
-      lastCheckDate: ''
+      lastCheckDate: ''  // ainda vazio, será setado no increment
     };
     habits.push(newHabit);
   }
@@ -199,7 +198,7 @@ function renderHabits() {
     const li = document.createElement('li');
     li.className = 'habit-item';
 
-    // Para arrastar e soltar
+    // Arrastar e Soltar
     li.setAttribute('draggable', 'true');
     li.dataset.habitId = habit.id;
 
@@ -207,17 +206,14 @@ function renderHabits() {
       e.dataTransfer.setData('text/plain', habit.id); 
       li.classList.add('dragging');
 
-      // Criamos um placeholder no momento do dragstart
+      // Placeholder
       placeholderEl = document.createElement('li');
       placeholderEl.className = 'habit-item placeholder';
-      placeholderEl.style.height = li.offsetHeight + 'px'; 
-      // altura igual ao item para ocupar o espaço na lista
+      placeholderEl.style.height = li.offsetHeight + 'px';
     });
 
     li.addEventListener('dragend', () => {
       li.classList.remove('dragging');
-
-      // remove qualquer placeholder existente
       if (placeholderEl && placeholderEl.parentNode) {
         placeholderEl.parentNode.removeChild(placeholderEl);
       }
@@ -333,66 +329,58 @@ function renderHabits() {
   });
 }
 
-// Eventos para drag-and-drop no UL (habitsList)
+// Dragover na lista
 habitsList.addEventListener('dragover', (e) => {
   e.preventDefault(); 
-
-  // Pegamos o item "dragging" e o "placeholder"
   const draggedItem = document.querySelector('.habit-item.dragging');
   if (!draggedItem || !placeholderEl) return;
 
-  // Encontramos o elemento depois do qual vamos inserir o placeholder
+  // Definir onde inserir a placeholder
   const afterElement = getDragAfterElement(habitsList, e.clientY);
   if (!afterElement) {
-    // se não existe afterElement, solta no final
     habitsList.appendChild(placeholderEl);
   } else {
     habitsList.insertBefore(placeholderEl, afterElement);
   }
 });
 
+// Drop final
 habitsList.addEventListener('drop', (e) => {
   e.preventDefault();
   const draggedHabitId = e.dataTransfer.getData('text/plain');
-
-  // Deixamos a placeholder no local certo
   const afterElement = placeholderEl && placeholderEl.nextElementSibling;
-  // se a placeholder está no final, afterElement será null
 
   reorderHabits(draggedHabitId, afterElement);
 
-  // Remove a placeholder
   if (placeholderEl && placeholderEl.parentNode) {
     placeholderEl.parentNode.removeChild(placeholderEl);
   }
   placeholderEl = null;
 });
 
-/**
- * Calcula qual item vem logo depois da posição do mouse (y).
- * Se não houver item, retorna null (ou seja, final da lista).
+/** 
+ * Define o local de inserção da placeholder 
+ * com base na posição do mouse (y).
  */
 function getDragAfterElement(container, y) {
-  const habitItems = [...container.querySelectorAll('.habit-item:not(.dragging):not(.placeholder)')];
+  const items = [...container.querySelectorAll('.habit-item:not(.dragging):not(.placeholder)')];
   let closest = null;
   let closestOffset = Number.NEGATIVE_INFINITY;
 
-  habitItems.forEach(item => {
+  items.forEach(item => {
     const box = item.getBoundingClientRect();
     const offset = y - box.top - box.height / 2;
-
     if (offset < 0 && offset > closestOffset) {
       closestOffset = offset;
       closest = item;
     }
   });
 
-  return closest; 
+  return closest;
 }
 
-/**
- * Reordena o array 'habits' baseado no ID arrastado 
- * e no elemento 'afterElement'
+/** 
+ * Reordena array 'habits' com base em draggedHabitId e afterElement 
  */
 function reorderHabits(draggedHabitId, afterElement) {
   const draggedIndex = habits.findIndex(h => h.id == draggedHabitId);
@@ -401,7 +389,7 @@ function reorderHabits(draggedHabitId, afterElement) {
   const [draggedItem] = habits.splice(draggedIndex, 1);
 
   if (!afterElement) {
-    // se não existe afterElement, insere no fim
+    // solta no fim
     habits.push(draggedItem);
   } else {
     const afterHabitId = afterElement.dataset.habitId;
@@ -413,14 +401,14 @@ function reorderHabits(draggedHabitId, afterElement) {
   renderHabits();
 }
 
-/** ====== FUNÇÃO PARA RESETAR O PROGRESSO SE O DIA MUDOU ====== */
+/** ====== FUNÇÃO PARA RESETAR PROGRESSO (DATA LOCAL) ====== */
 function resetDailyProgressIfNeeded() {
-  const todayStr = getTodayStr();
+  const todayStr = getLocalDateStr(); // data local "YYYY-MM-DD"
   let updated = false;
 
   habits.forEach(habit => {
     if (habit.lastCheckDate !== todayStr) {
-      // Zera o progress, removendo a cor "verde"
+      // zera progress e volta cor normal
       habit.progress = 0;
       updated = true;
     }
@@ -442,12 +430,11 @@ function incrementProgress(habitId) {
     return;
   }
 
-  // A vibração curta
-  vibrateShort();
-
-  const todayStr = getTodayStr();
+  // Pega data local para saber se é um novo dia
+  const todayStr = getLocalDateStr();
   if (habit.lastCheckDate !== todayStr) {
-    if (isYesterday(habit.lastCheckDate, todayStr)) {
+    // Se o dia anterior for "ontem" => streak++
+    if (isLocalYesterday(habit.lastCheckDate, todayStr)) {
       habit.streak++;
     } else {
       habit.streak = 1;
@@ -456,7 +443,7 @@ function incrementProgress(habitId) {
   }
 
   habit.progress++;
-  // Atualiza bestStreak
+  // bestStreak
   if (habit.streak > habit.bestStreak) {
     habit.bestStreak = habit.streak;
   }
@@ -473,31 +460,30 @@ function incrementProgress(habitId) {
   renderHabits();
 }
 
-/** Exemplo de função de vibração */
-function vibrateShort() {
-  if ('vibrate' in navigator) {
-    navigator.vibrate(50); 
-  }
+/** ====== Funções de Data Local ====== */
+function getLocalDateStr() {
+  // Retorna "YYYY-MM-DD" no fuso local
+  const now = new Date();
+  const yyyy = now.getFullYear();
+  const mm = String(now.getMonth() + 1).padStart(2, '0');
+  const dd = String(now.getDate()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}`;
 }
 
-
-/** Funções auxiliares de data/streak */
-function getTodayStr() {
-  const d = new Date();
-  return d.toISOString().slice(0,10);
-}
-function isYesterday(lastDateStr, todayStr) {
+function isLocalYesterday(lastDateStr, todayStr) {
+  // Se lastDateStr for "YYYY-MM-DD", podemos comparar se é "ontem"
   if (!lastDateStr) return false;
-  const last = new Date(lastDateStr);
-  const today = new Date(todayStr);
-  const diff = today - last;
-  return diff === 86400000; // 24h em ms
+  // Convertemos para Date e vemos a diferença
+  const lastDate = new Date(lastDateStr + 'T00:00:00');
+  const todayDate = new Date(todayStr + 'T00:00:00');
+  const diff = todayDate - lastDate; // em ms
+  return diff === 86400000; // 24h
 }
 
 /** ====== EXCLUIR HÁBITO ====== */
 function deleteHabit(habitId) {
   if (!confirm('Excluir este hábito?')) return;
-  habits = habits.filter(h => h.id !== habitId);
+  habits = habits.filter(h => h.id != habitId);
   saveData();
   renderHabits();
 }
