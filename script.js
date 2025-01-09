@@ -1,7 +1,8 @@
 /******************************************************
  *  RASTREADOR DE HÁBITOS GAMIFICADO - HabitUp
  *  
- *  (Com streak, bestStreak, barra de progresso, etc.)
+ *  (Com streak, bestStreak, barra de progresso, reset diário,
+ *   campo de nome do usuário e agora drag-and-drop na lista)
  ******************************************************/
 
 // Botão Criar Hábito (modal antigo)
@@ -18,7 +19,7 @@ const cancelModalBtn = document.getElementById('cancelModalBtn');
 const overlay = document.getElementById('overlay');
 const habitsList = document.getElementById('habitsList');
 
-// NOVO: Modal de Boas-Vindas
+// Modal de Boas-Vindas
 const startNowBtn = document.getElementById('startNowBtn');
 const welcomeModal = document.getElementById('welcomeModal');
 const confirmWelcomeBtn = document.getElementById('confirmWelcomeBtn');
@@ -34,9 +35,19 @@ const xpToNextLevelEl = document.getElementById('xpToNextLevel');
 const xpProgressEl = document.getElementById('xpProgress');
 const mascotImg = document.getElementById('mascotImg');
 
-/** Estrutura de dados (exemplo):
+/**
+ * Estrutura de dados (exemplo):
  * habits = [
- *   { id, name, icon, goal, progress, streak, bestStreak, lastCheckDate },
+ *   { 
+ *     id, 
+ *     name, 
+ *     icon, 
+ *     goal, 
+ *     progress, 
+ *     streak, 
+ *     bestStreak, 
+ *     lastCheckDate 
+ *   },
  * ]
  */
 let habits = [];
@@ -49,7 +60,7 @@ let userName = ''; // armazena o nome do usuário
 /** ====== INICIALIZAÇÃO ====== */
 document.addEventListener('DOMContentLoaded', () => {
   loadData();           
-  resetDailyProgressIfNeeded();  // <--- Nova função para zerar progress se o dia mudou
+  resetDailyProgressIfNeeded();  // Zera progresso se o dia mudou
   renderHabits();       
   updateXpUI();
   checkUserName();      
@@ -80,7 +91,7 @@ startNowBtn.addEventListener('click', () => {
 // Confirmar nome no modal de boas-vindas
 confirmWelcomeBtn.addEventListener('click', confirmUserName);
 
-/** ====== MODAL DE HÁBITO (ANTIGO) ====== */
+/** ====== MODAL DE HÁBITO ====== */
 function openHabitModal(isEdit, habitData = null) {
   habitModal.classList.remove('hidden');
   overlay.classList.remove('hidden');
@@ -183,6 +194,18 @@ function renderHabits() {
   habits.forEach(habit => {
     const li = document.createElement('li');
     li.className = 'habit-item';
+
+    // Para arrastar e soltar
+    li.setAttribute('draggable', 'true');
+    li.dataset.habitId = habit.id; // armazenar ID no dataset
+
+    li.addEventListener('dragstart', (e) => {
+      e.dataTransfer.setData('text/plain', habit.id); 
+      li.classList.add('dragging');
+    });
+    li.addEventListener('dragend', () => {
+      li.classList.remove('dragging');
+    });
 
     // Verifica se o hábito está completo
     if (habit.progress >= habit.goal) {
@@ -293,6 +316,68 @@ function renderHabits() {
   });
 }
 
+// Eventos para drag-and-drop no UL (habitsList)
+habitsList.addEventListener('dragover', (e) => {
+  e.preventDefault(); 
+});
+habitsList.addEventListener('drop', (e) => {
+  e.preventDefault();
+  const draggedHabitId = e.dataTransfer.getData('text/plain');
+  const afterElement = getDragAfterElement(habitsList, e.clientY);
+  reorderHabits(draggedHabitId, afterElement);
+});
+
+/**
+ * Calcula qual item vem logo depois da posição do mouse (y),
+ * para inserir o item arrastado antes dele.
+ */
+function getDragAfterElement(container, y) {
+  // Pegamos todos os .habit-item que não estejam em estado "dragging"
+  const habitItems = [...container.querySelectorAll('.habit-item:not(.dragging)')];
+  let closest = null;
+  let closestOffset = Number.NEGATIVE_INFINITY;
+
+  habitItems.forEach(item => {
+    const box = item.getBoundingClientRect();
+    const offset = y - box.top - box.height / 2;
+
+    // Se offset < 0 e offset é maior que o closestOffset, significa que
+    // estamos logo antes desse item
+    if (offset < 0 && offset > closestOffset) {
+      closestOffset = offset;
+      closest = item;
+    }
+  });
+
+  return closest; // se null, significa que vai pro final
+}
+
+/**
+ * Reordena o array 'habits' baseado no ID arrastado e no elemento 'afterElement'
+ */
+function reorderHabits(draggedHabitId, afterElement) {
+  const draggedIndex = habits.findIndex(h => h.id == draggedHabitId);
+  if (draggedIndex === -1) return;
+
+  // remove do array
+  const [draggedItem] = habits.splice(draggedIndex, 1);
+
+  if (!afterElement) {
+    // Solta no fim
+    habits.push(draggedItem);
+  } else {
+    // Pega o ID do afterElement e acha o index
+    const afterHabitId = afterElement.dataset.habitId;
+    const afterIndex = habits.findIndex(h => h.id == afterHabitId);
+
+    // insere antes do afterIndex
+    habits.splice(afterIndex, 0, draggedItem);
+  }
+
+  saveData();
+  renderHabits();
+}
+
 /** ====== FUNÇÃO PARA RESETAR O PROGRESSO SE O DIA MUDOU ====== */
 function resetDailyProgressIfNeeded() {
   const todayStr = getTodayStr();
@@ -308,7 +393,6 @@ function resetDailyProgressIfNeeded() {
 
   if (updated) {
     saveData();
-    // Chamamos renderHabits() para atualizar a cor
     renderHabits();
   }
 }
@@ -352,11 +436,11 @@ function incrementProgress(habitId) {
   renderHabits();
 }
 
+/** Funções auxiliares de data/streak */
 function getTodayStr() {
   const d = new Date();
   return d.toISOString().slice(0,10);
 }
-
 function isYesterday(lastDateStr, todayStr) {
   if (!lastDateStr) return false;
   const last = new Date(lastDateStr);
@@ -365,7 +449,7 @@ function isYesterday(lastDateStr, todayStr) {
   return diff === 86400000; // 24h em ms
 }
 
-/** ====== Excluir Hábito ====== */
+/** ====== EXCLUIR HÁBITO ====== */
 function deleteHabit(habitId) {
   if (!confirm('Excluir este hábito?')) return;
   habits = habits.filter(h => h.id !== habitId);
@@ -373,7 +457,7 @@ function deleteHabit(habitId) {
   renderHabits();
 }
 
-/** ====== XP / Level / Mascote ====== */
+/** ====== XP / LEVEL / MASCOTE ====== */
 function addXp(amount) {
   currentXp += amount;
   if (currentXp >= xpToNextLevel) {
@@ -407,7 +491,7 @@ function bounceMascot() {
   mascotImg.classList.add('bounce');
 }
 
-/** ====== Confetti ====== */
+/** ====== CONFETTI ====== */
 function runConfetti() {
   const confettiContainer = document.createElement('div');
   confettiContainer.style.position = 'fixed';
@@ -450,7 +534,7 @@ function runConfetti() {
   }, 4000);
 }
 
-/** ====== Salvar e Carregar do LocalStorage ====== */
+/** ====== SALVAR e CARREGAR do localStorage ====== */
 function saveData() {
   const data = {
     habits,
