@@ -377,6 +377,26 @@ img {
   to   {transform: scale(1);}
 }
 
+@keyframes swayMascot {
+  0%   { transform: rotate(0deg); }
+  50%  { transform: rotate(2deg); }
+  100% { transform: rotate(0deg); }
+}
+.mascot-container {
+  animation: swayMascot 2.5s ease-in-out infinite;
+}
+
+@keyframes pulseMascot {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+.mascot-container:active {
+  animation: pulseMascot 0.3s ease;
+}
+
+
 .progress-section h3 {
   margin: 0;
   color: var(--color-primary);
@@ -627,6 +647,33 @@ img {
 .welcome-modal-content ul li {
   margin-bottom: 0.4rem;
 }
+
+/* Modal de parabéns */
+.congrats-modal {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--color-panel);
+  width: 90%;
+  max-width: 400px;
+  border-radius: var(--radius-base);
+  z-index: 1100;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  animation: fadeInUp 0.4s ease forwards;
+}
+
+.congrats-content {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  text-align: center;
+}
+
+.congrats-modal.hidden {
+  display: none;
+}
+
 
 /* ========================
    OVERLAY

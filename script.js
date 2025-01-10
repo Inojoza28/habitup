@@ -1,12 +1,16 @@
 /******************************************************
  *  RASTREADOR DE HÁBITOS GAMIFICADO - HabitUp
  *  
- *  (Streak e bestStreak APENAS quando o hábito é 
- *   totalmente concluído no dia, reset diário no local,
- *   drag-and-drop com placeholder, vibração, etc.)
+ *  (Streak/bestStreak só contando se completo no dia,
+ *   reset diário à meia-noite local,
+ *   drag-and-drop com placeholder,
+ *   vibração curta no "Feito",
+ *   modal de boas-vindas,
+ *   modal de parabéns a cada nível múltiplo de 5,
+ *   E agora: apenas o modal de parabéns NÃO fecha ao clicar no overlay)
  ******************************************************/
 
-// Botão Criar Hábito (modal antigo)
+// Seletores gerais
 const addHabitBtn = document.getElementById('addHabitBtn');
 const habitModal = document.getElementById('habitModal');
 const modalTitle = document.getElementById('modalTitle');
@@ -16,7 +20,6 @@ const habitGoalInput = document.getElementById('habitGoal');
 const saveHabitBtn = document.getElementById('saveHabitBtn');
 const cancelModalBtn = document.getElementById('cancelModalBtn');
 
-// Overlay único
 const overlay = document.getElementById('overlay');
 const habitsList = document.getElementById('habitsList');
 
@@ -25,6 +28,12 @@ const startNowBtn = document.getElementById('startNowBtn');
 const welcomeModal = document.getElementById('welcomeModal');
 const confirmWelcomeBtn = document.getElementById('confirmWelcomeBtn');
 const userNameField = document.getElementById('userNameField');
+const closeWelcomeBtn = document.getElementById('closeWelcomeBtn'); // opcional se quiser um botão "Fechar"
+
+// Modal de Parabéns (nível múltiplo de 5)
+const congratsModal = document.getElementById('congratsModal');
+const congratsMessage = document.getElementById('congratsMessage');
+const closeCongratsBtn = document.getElementById('closeCongratsBtn');
 
 // Exibição do nome do usuário
 const userNameDisplay = document.getElementById('userNameDisplay');
@@ -36,8 +45,25 @@ const xpToNextLevelEl = document.getElementById('xpToNextLevel');
 const xpProgressEl = document.getElementById('xpProgress');
 const mascotImg = document.getElementById('mascotImg');
 
+/** 
+ * Array de frases motivacionais para cada múltiplo de 5 níveis.
+ * Se o usuário passar do 50, usamos a última (fallback).
+ */
+const motivationalMessages = [
+  "Você está decolando! Mantenha seus hábitos e conquiste resultados incríveis.",
+  "Fantástico! Sua dedicação está pagando cada vez mais.",
+  "Uau! A cada meta cumprida, você fica mais próximo do seu objetivo.",
+  "Você é imparável! Continue no ritmo e veja sua vida evoluir.",
+  "Nível novo, força renovada. Você está no caminho certo!",
+  "É isso aí! Persistência é a chave para grandes conquistas.",
+  "Que progresso maravilhoso! Cada esforço vale muito a pena.",
+  "Você brilha quando supera seus próprios limites. Siga firme!",
+  "Incrível! Sua disciplina inspira quem está à sua volta.",
+  "Brilhante! A cada vitória, você prova do que é capaz."
+];
+
 /**
- * Estrutura de dados:
+ * Estrutura de dados (exemplo):
  * habits = [
  *   { 
  *     id, 
@@ -56,44 +82,57 @@ let currentXp = 0;
 let xpToNextLevel = 50;
 let level = 1;
 let editingHabitId = null;
-let userName = ''; // armazena o nome do usuário
+let userName = '';
 
-// Placeholder para drag-and-drop
-let placeholderEl = null;
+let placeholderEl = null; // para drag-and-drop
 
 /** ====== INICIALIZAÇÃO ====== */
 document.addEventListener('DOMContentLoaded', () => {
-  loadData();           
+  loadData();
   resetDailyProgressIfNeeded();
   renderHabits();
   updateXpUI();
-  checkUserName();      
+  checkUserName();
+
+  // Fechar modal Boas-Vindas (se existir um botão "Fechar" lá)
+  if (closeWelcomeBtn) {
+    closeWelcomeBtn.addEventListener('click', closeWelcomeModal);
+  }
+
+  // Fechar modal de Parabéns pelo botão (não pelo overlay)
+  if (closeCongratsBtn) {
+    closeCongratsBtn.addEventListener('click', () => {
+      if (congratsModal) congratsModal.classList.add('hidden');
+      overlay.classList.add('hidden');
+    });
+  }
+
+  // Overlay: fecha todos os modais, MENOS o modal de parabéns
+  overlay.addEventListener('click', () => {
+    // Se o modal de parabéns estiver aberto, não faz nada
+    if (congratsModal && !congratsModal.classList.contains('hidden')) {
+      return; 
+    }
+    // Senão, fecha habitModal ou welcomeModal se abertos
+    if (!habitModal.classList.contains('hidden')) {
+      closeHabitModal();
+    }
+    if (!welcomeModal.classList.contains('hidden')) {
+      closeWelcomeModal();
+    }
+  });
 });
 
-/** ====== EVENTOS ====== */
-// Modal de hábitos
+/** ====== EVENTOS DO MODAL DE HÁBITO ====== */
 addHabitBtn.addEventListener('click', () => openHabitModal(false));
 saveHabitBtn.addEventListener('click', saveHabit);
 cancelModalBtn.addEventListener('click', closeHabitModal);
 
-// Overlay fecha modais se estiverem abertos
-overlay.addEventListener('click', () => {
-  if (!habitModal.classList.contains('hidden')) {
-    closeHabitModal();
-  }
-  if (!welcomeModal.classList.contains('hidden')) {
-    closeWelcomeModal();
-  }
-});
-
-// Botão "Começar Agora" abre modal de boas-vindas
+// Botão "Começar Agora" abre modal de Boas-Vindas
 startNowBtn.addEventListener('click', () => {
   welcomeModal.classList.remove('hidden');
   overlay.classList.remove('hidden');
 });
-
-// Confirmar nome no modal de boas-vindas
-confirmWelcomeBtn.addEventListener('click', confirmUserName);
 
 /** ====== MODAL DE HÁBITO ====== */
 function openHabitModal(isEdit, habitData = null) {
@@ -135,12 +174,9 @@ function confirmUserName() {
 
   userName = nameValue;
   localStorage.setItem('habitUpUserName', userName);
-
-  // Exibe no progress-section
   userNameDisplay.innerText = 'Olá, ' + userName + '!';
   userNameDisplay.classList.remove('hidden');
 
-  // Fecha o modal
   closeWelcomeModal();
 }
 
@@ -166,13 +202,11 @@ function saveHabit() {
   }
 
   if (editingHabitId) {
-    // Editando
     const idx = habits.findIndex(h => h.id == editingHabitId);
     habits[idx].name = name;
     habits[idx].icon = icon;
     habits[idx].goal = goal;
   } else {
-    // Criando
     const newHabit = {
       id: Date.now(),
       name,
@@ -207,7 +241,6 @@ function renderHabits() {
       e.dataTransfer.setData('text/plain', habit.id); 
       li.classList.add('dragging');
 
-      // Placeholder
       placeholderEl = document.createElement('li');
       placeholderEl.className = 'habit-item placeholder';
       placeholderEl.style.height = li.offsetHeight + 'px';
@@ -221,18 +254,16 @@ function renderHabits() {
       placeholderEl = null;
     });
 
-    // Se o hábito foi concluído hoje, marca "verde"
+    // Se o hábito está completo
     if (habit.progress >= habit.goal) {
       li.classList.add('completed-today');
     } else {
       li.classList.remove('completed-today');
     }
 
-    // Linha de topo
     const topDiv = document.createElement('div');
     topDiv.className = 'habit-top';
 
-    // Info
     const infoDiv = document.createElement('div');
     infoDiv.className = 'habit-info';
 
@@ -247,11 +278,9 @@ function renderHabits() {
     infoDiv.appendChild(iconSpan);
     infoDiv.appendChild(nameSpan);
 
-    // Ações
     const actionsDiv = document.createElement('div');
     actionsDiv.className = 'habit-actions';
 
-    // Botão Feito
     const doneBtn = document.createElement('button');
     doneBtn.className = 'action-btn';
     doneBtn.innerText = '✔️'; 
@@ -261,7 +290,6 @@ function renderHabits() {
       incrementProgress(habit.id);
     });
 
-    // Botão Editar
     const editBtn = document.createElement('button');
     editBtn.className = 'action-btn';
     editBtn.innerText = '✏️'; 
@@ -271,7 +299,6 @@ function renderHabits() {
       openHabitModal(true, habit);
     });
 
-    // Botão Deletar
     const delBtn = document.createElement('button');
     delBtn.className = 'action-btn';
     delBtn.innerText = '🗑️'; 
@@ -288,11 +315,11 @@ function renderHabits() {
     topDiv.appendChild(infoDiv);
     topDiv.appendChild(actionsDiv);
 
-    // Detalhes (barra de progresso, streak, etc.)
+    // Detalhes
     const detailsDiv = document.createElement('div');
     detailsDiv.className = 'habit-details';
 
-    // Barra de Progresso
+    // Barra Progresso
     const progressBar = document.createElement('div');
     progressBar.className = 'habit-progress-bar';
     const progressFill = document.createElement('div');
@@ -301,15 +328,10 @@ function renderHabits() {
     progressFill.style.width = (pct > 100 ? 100 : pct) + '%';
     progressBar.appendChild(progressFill);
 
-    // Streak
     const pStreak = document.createElement('p');
     pStreak.innerText = `Streak: ${habit.streak} dia(s)`;
-
-    // Best Streak
     const pBestStreak = document.createElement('p');
     pBestStreak.innerText = `Melhor sequencia: ${habit.bestStreak} dia(s)`;
-
-    // Progresso diario
     const pProgress = document.createElement('p');
     pProgress.innerText = `Hoje: ${habit.progress}/${habit.goal}`;
 
@@ -318,7 +340,6 @@ function renderHabits() {
     detailsDiv.appendChild(pStreak);
     detailsDiv.appendChild(pBestStreak);
 
-    // Mostrar/Ocultar detalhes ao clicar na linha de topo
     topDiv.addEventListener('click', () => {
       detailsDiv.style.display = 
         (detailsDiv.style.display === 'flex') ? 'none' : 'flex';
@@ -330,9 +351,9 @@ function renderHabits() {
   });
 }
 
-// Dragover na lista
+// DRAGOVER
 habitsList.addEventListener('dragover', (e) => {
-  e.preventDefault();
+  e.preventDefault(); 
   const draggedItem = document.querySelector('.habit-item.dragging');
   if (!draggedItem || !placeholderEl) return;
 
@@ -344,7 +365,7 @@ habitsList.addEventListener('dragover', (e) => {
   }
 });
 
-// Drop final
+// DROP
 habitsList.addEventListener('drop', (e) => {
   e.preventDefault();
   const draggedHabitId = e.dataTransfer.getData('text/plain');
@@ -358,8 +379,8 @@ habitsList.addEventListener('drop', (e) => {
   placeholderEl = null;
 });
 
-/**
- * Calcula o elemento "afterElement" de acordo com a posição do mouse (clientY).
+/** Retorna o item após o qual o placeholder deve ser inserido, 
+ *  com base na posição do mouse.
  */
 function getDragAfterElement(container, y) {
   const items = [...container.querySelectorAll('.habit-item:not(.dragging):not(.placeholder)')];
@@ -378,9 +399,7 @@ function getDragAfterElement(container, y) {
   return closest;
 }
 
-/**
- * Reordena o array 'habits' com base no draggedHabitId e no afterElement
- */
+/** Reordena array 'habits' */
 function reorderHabits(draggedHabitId, afterElement) {
   const draggedIndex = habits.findIndex(h => h.id == draggedHabitId);
   if (draggedIndex === -1) return;
@@ -400,16 +419,24 @@ function reorderHabits(draggedHabitId, afterElement) {
 }
 
 /** 
- * Reset progress se o dia local mudou 
- * (hábito não continua verde nem incrementa streak se não completou hoje)
+ * Ajuste: resetDailyProgressIfNeeded só deve zerar se 
+ * lastCheckDate for de outro dia. 
+ * 
+ * Mas precisamos setar lastCheckDate SEMPRE que 
+ * incrementamos progress, mesmo se ainda não completou o hábito.
  */
 function resetDailyProgressIfNeeded() {
   const todayStr = getLocalDateStr();
   let updated = false;
 
   habits.forEach(habit => {
+    // Se lastCheckDate não for hoje e não completou o hábito,
+    // zera apenas se o dia REALMENTE mudou
     if (habit.lastCheckDate !== todayStr) {
-      // Zera o progress e tira a cor
+      // Se o hábito foi feito (progress >= goal), 
+      // mantemos? 
+      // (Depende da sua lógica, mas assumimos que um dia novo -> zera tudo
+      // exceto streak/bestStreak.)
       habit.progress = 0;
       updated = true;
     }
@@ -422,47 +449,49 @@ function resetDailyProgressIfNeeded() {
 }
 
 /** 
- * Increment progress APENAS COMPLETA O DIA se progress == goal
- * para streak e bestStreak
+ * incrementProgress: ajustado para SEMPRE atualizar 
+ * lastCheckDate se for outro dia, mesmo sem completar 
+ * a meta. Assim, o progresso parcial do dia não é perdido 
+ * ao recarregar a página.
  */
 function incrementProgress(habitId) {
   const habit = habits.find(h => h.id == habitId);
   if (!habit) return;
 
-  // Se já completou hoje
   if (habit.progress >= habit.goal) {
     alert('Você já atingiu a meta deste hábito hoje!');
     return;
   }
 
-  // Subimos partial progress?
-  habit.progress++;
-
-  // Vibração curta (opcional)
   vibrateShort();
+  const todayStr = getLocalDateStr();
 
-  // Ganha XP por cada incremento
+  // Se for outro dia, atualiza lastCheckDate 
+  // mesmo que ainda não tenha completado a meta.
+  // Assim, não resetamos esse progress ao recarregar.
+  if (habit.lastCheckDate !== todayStr) {
+    habit.lastCheckDate = todayStr;
+  }
+
+  habit.progress++;
   addXp(10);
 
-  // Se completou hoje (progress == goal), conta 1 dia
+  // Se completou o hábito
   if (habit.progress >= habit.goal) {
-    const todayStr = getLocalDateStr();
-    // Se for outro dia comparado ao lastCheckDate, faz streak logic
-    if (habit.lastCheckDate !== todayStr) {
-      if (isLocalYesterday(habit.lastCheckDate, todayStr)) {
-        habit.streak++;
-      } else {
-        habit.streak = 1;
-      }
-      habit.lastCheckDate = todayStr;
+    // Somente agora consideramos streak
+    if (isLocalYesterday(habit.lastCheckDate, todayStr)) {
+      habit.streak++;
+    } else if (habit.lastCheckDate !== todayStr) {
+      habit.streak = 1;
     }
 
-    // Atualiza bestStreak
+    // Caso ainda não tivesse sido setado (só por segurança)
+    habit.lastCheckDate = todayStr;
+
     if (habit.streak > habit.bestStreak) {
       habit.bestStreak = habit.streak;
     }
 
-    // Bônus se completou a meta
     addXp(10);
     runConfetti();
   }
@@ -471,16 +500,15 @@ function incrementProgress(habitId) {
   renderHabits();
 }
 
-/** Exemplo de vibração curta */
+/** Vibração curta */
 function vibrateShort() {
   if ('vibrate' in navigator) {
-    navigator.vibrate(50); 
+    navigator.vibrate(50);
   }
 }
 
-/** Funções auxiliares de data local */
+/** Data local "YYYY-MM-DD" */
 function getLocalDateStr() {
-  // Retorna "YYYY-MM-DD" no fuso local
   const now = new Date();
   const yyyy = now.getFullYear();
   const mm = String(now.getMonth() + 1).padStart(2, '0');
@@ -493,10 +521,10 @@ function isLocalYesterday(lastDateStr, todayStr) {
   const lastDate = new Date(lastDateStr + 'T00:00:00');
   const todayDate = new Date(todayStr + 'T00:00:00');
   const diff = todayDate - lastDate;
-  return diff === 86400000; // 24h
+  return diff === 86400000; 
 }
 
-/** ====== EXCLUIR HÁBITO ====== */
+/** Excluir hábito */
 function deleteHabit(habitId) {
   if (!confirm('Excluir este hábito?')) return;
   habits = habits.filter(h => h.id != habitId);
@@ -504,7 +532,7 @@ function deleteHabit(habitId) {
   renderHabits();
 }
 
-/** ====== XP / Level / Mascote ====== */
+/** XP / Level / Mascote */
 function addXp(amount) {
   currentXp += amount;
   if (currentXp >= xpToNextLevel) {
@@ -514,13 +542,38 @@ function addXp(amount) {
 }
 
 function levelUp() {
-  currentXp = currentXp - xpToNextLevel;
+  currentXp -= xpToNextLevel;
   level++;
   xpToNextLevel = Math.floor(xpToNextLevel * 1.3);
   bounceMascot();
   runConfetti();
+
+  // Se nível for múltiplo de 5 => mostra modal
+  if (level % 5 === 0) {
+    showCongratulationsModal(level);
+  }
+
+  saveData();
+  updateXpUI();
 }
 
+/** Modal de Parabéns */
+function showCongratulationsModal(currentLevel) {
+  // index do array
+  const idx = (currentLevel / 5) - 1;
+  const msg = motivationalMessages[idx] ||
+    "Você é incrível! Continue firme e supere seus próprios recordes!";
+
+  if (congratsMessage) {
+    congratsMessage.innerText = `Você alcançou o nível ${currentLevel}!\n\n${msg}`;
+  }
+  if (congratsModal) {
+    congratsModal.classList.remove('hidden');
+  }
+  overlay.classList.remove('hidden');
+}
+
+/** Atualiza UI */
 function updateXpUI() {
   levelValue.innerText = level;
   currentXpEl.innerText = currentXp;
@@ -534,11 +587,11 @@ function updateXpUI() {
 
 function bounceMascot() {
   mascotImg.classList.remove('bounce');
-  void mascotImg.offsetWidth; 
+  void mascotImg.offsetWidth;
   mascotImg.classList.add('bounce');
 }
 
-/** ====== CONFETTI ====== */
+/** Confetti */
 function runConfetti() {
   const confettiContainer = document.createElement('div');
   confettiContainer.style.position = 'fixed';
@@ -581,7 +634,7 @@ function runConfetti() {
   }, 4000);
 }
 
-/** ====== SALVAR e CARREGAR localStorage ====== */
+/** SALVAR & CARREGAR */
 function saveData() {
   const data = {
     habits,
@@ -607,3 +660,30 @@ function loadData() {
     console.warn('Erro ao carregar localStorage:', e);
   }
 }
+
+
+
+function resetAllData() {
+  // Zera o array de hábitos
+  habits.forEach(habit => {
+    habit.progress = 0;
+    habit.streak = 0;
+    habit.bestStreak = 0;
+    habit.lastCheckDate = '';
+  });
+  // Zera o XP / Nível
+  currentXp = 0;
+  xpToNextLevel = 50;
+  level = 1;
+  // (Opcional) Zera o nome do usuário, se quiser testar do início
+  userName = '';
+
+  // Salva mudanças e re-renderiza
+  saveData();
+  renderHabits();
+  updateXpUI();
+  checkUserName(); // se quiser resetar o nome, basta remover do localStorage também
+  console.log('Todos os dados foram zerados!');
+}
+
+// Para ativar: resetAllData()
