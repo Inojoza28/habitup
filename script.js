@@ -62,18 +62,17 @@ const motivationalMessages = [
   "Brilhante! A cada vitória, você prova do que é capaz."
 ];
 
-
 /**
  * Estrutura de dados (exemplo):
  * habits = [
  *   { 
- *     id, 
- *     name, 
- *     icon, 
- *     goal, 
- *     progress, 
- *     streak, 
- *     bestStreak, 
+ *     id,
+ *     name,
+ *     icon,
+ *     goal,
+ *     progress,
+ *     streak,
+ *     bestStreak,
  *     lastCheckDate
  *   },
  * ]
@@ -95,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
   updateXpUI();
   checkUserName();
 
-  // Fechar modal Boas-Vindas (se existir um botão "Fechar" lá)
+  // Se existir um botão "Fechar" no modal de boas-vindas
   if (closeWelcomeBtn) {
     closeWelcomeBtn.addEventListener('click', closeWelcomeModal);
   }
@@ -108,18 +107,18 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // IMPORTANTE: Vincular o clique do botão "confirmWelcomeBtn" à função confirmUserName
+  // Certifica que confirmWelcomeBtn chama confirmUserName()
   if (confirmWelcomeBtn) {
     confirmWelcomeBtn.addEventListener('click', confirmUserName);
   }
 
-  // Overlay: fecha todos os modais, MENOS o modal de parabéns
+  // Overlay: fecha todos os modais, MENOS o modal de Parabéns
   overlay.addEventListener('click', () => {
     // Se o modal de parabéns estiver aberto, não faz nada
     if (congratsModal && !congratsModal.classList.contains('hidden')) {
       return; 
     }
-    // Senão, fecha habitModal ou welcomeModal se abertos
+    // Fecha habitModal ou welcomeModal se abertos
     if (!habitModal.classList.contains('hidden')) {
       closeHabitModal();
     }
@@ -260,13 +259,14 @@ function renderHabits() {
       placeholderEl = null;
     });
 
-    // Se o hábito está completo
+    // Marca visualmente se completou hoje
     if (habit.progress >= habit.goal) {
       li.classList.add('completed-today');
     } else {
       li.classList.remove('completed-today');
     }
 
+    // Topo do item
     const topDiv = document.createElement('div');
     topDiv.className = 'habit-top';
 
@@ -284,6 +284,7 @@ function renderHabits() {
     infoDiv.appendChild(iconSpan);
     infoDiv.appendChild(nameSpan);
 
+    // Ações: Feito/Editar/Excluir
     const actionsDiv = document.createElement('div');
     actionsDiv.className = 'habit-actions';
 
@@ -321,11 +322,10 @@ function renderHabits() {
     topDiv.appendChild(infoDiv);
     topDiv.appendChild(actionsDiv);
 
-    // Detalhes
+    // Detalhes (barra de progresso, streak, bestStreak)
     const detailsDiv = document.createElement('div');
     detailsDiv.className = 'habit-details';
 
-    // Barra Progresso
     const progressBar = document.createElement('div');
     progressBar.className = 'habit-progress-bar';
     const progressFill = document.createElement('div');
@@ -346,6 +346,7 @@ function renderHabits() {
     detailsDiv.appendChild(pStreak);
     detailsDiv.appendChild(pBestStreak);
 
+    // Mostra/oculta detalhes ao clicar no topo
     topDiv.addEventListener('click', () => {
       detailsDiv.style.display = 
         (detailsDiv.style.display === 'flex') ? 'none' : 'flex';
@@ -386,7 +387,7 @@ habitsList.addEventListener('drop', (e) => {
 });
 
 /** Retorna o item após o qual o placeholder deve ser inserido, 
- *  com base na posição do mouse.
+ *  com base na posição do mouse (e.clientY).
  */
 function getDragAfterElement(container, y) {
   const items = [...container.querySelectorAll('.habit-item:not(.dragging):not(.placeholder)')];
@@ -425,22 +426,17 @@ function reorderHabits(draggedHabitId, afterElement) {
 }
 
 /** 
- * Ajuste: resetDailyProgressIfNeeded só deve zerar se 
- * lastCheckDate for de outro dia. 
- * 
- * Mas precisamos setar lastCheckDate SEMPRE que 
- * incrementamos progress, mesmo se ainda não completou o hábito.
+ * Se for um novo dia, zera progress mas mantém streak / bestStreak
  */
 function resetDailyProgressIfNeeded() {
   const todayStr = getLocalDateStr();
   let updated = false;
 
   habits.forEach(habit => {
-    // Se lastCheckDate não for hoje,
-    // zera se o dia REALMENTE mudou
+    // Se lastCheckDate for != hoje, significa dia mudou
     if (habit.lastCheckDate !== todayStr) {
+      // Zera apenas o progress
       habit.progress = 0;
-      // Mantemos streak/bestStreak; 
       updated = true;
     }
   });
@@ -452,10 +448,9 @@ function resetDailyProgressIfNeeded() {
 }
 
 /** 
- * incrementProgress: ajustado para SEMPRE atualizar 
- * lastCheckDate se for outro dia, mesmo sem completar 
- * a meta. Assim, o progresso parcial do dia não é perdido 
- * ao recarregar a página.
+ * incrementProgress:
+ *   - incrementamos progress parcial
+ *   - se progress >= goal => concluímos hoje e incrementamos streak
  */
 function incrementProgress(habitId) {
   const habit = habits.find(h => h.id == habitId);
@@ -467,30 +462,31 @@ function incrementProgress(habitId) {
   }
 
   vibrateShort();
-  const todayStr = getLocalDateStr();
-
-  if (habit.lastCheckDate !== todayStr) {
-    habit.lastCheckDate = todayStr;
-  }
-
   habit.progress++;
   addXp(10);
 
-  // Se completou o hábito
+  const todayStr = getLocalDateStr();
+
+  // Se completou a meta
   if (habit.progress >= habit.goal) {
+    // Se lastCheckDate for ontem => streak++
     if (isLocalYesterday(habit.lastCheckDate, todayStr)) {
       habit.streak++;
-    } else if (habit.lastCheckDate !== todayStr) {
+    } 
+    // Se era outro dia distante => zera e começa em 1
+    else if (habit.lastCheckDate !== todayStr) {
       habit.streak = 1;
     }
 
-    // assegura que lastCheckDate = hoje
+    // Marca a data de conclusão
     habit.lastCheckDate = todayStr;
 
+    // Atualiza bestStreak se for maior
     if (habit.streak > habit.bestStreak) {
       habit.bestStreak = habit.streak;
     }
 
+    // XP Bônus
     addXp(10);
     runConfetti();
   }
@@ -520,7 +516,7 @@ function isLocalYesterday(lastDateStr, todayStr) {
   const lastDate = new Date(lastDateStr + 'T00:00:00');
   const todayDate = new Date(todayStr + 'T00:00:00');
   const diff = todayDate - lastDate;
-  return diff === 86400000; 
+  return diff === 86400000; // 24h
 }
 
 /** Excluir hábito */
@@ -558,7 +554,6 @@ function levelUp() {
 
 /** Modal de Parabéns */
 function showCongratulationsModal(currentLevel) {
-  // índice do array
   const idx = (currentLevel / 5) - 1;
   const msg = motivationalMessages[idx] ||
     "Você é incrível! Continue firme e supere seus próprios recordes!";
@@ -586,7 +581,7 @@ function updateXpUI() {
 
 function bounceMascot() {
   mascotImg.classList.remove('bounce');
-  void mascotImg.offsetWidth;
+  void mascotImg.offsetWidth; 
   mascotImg.classList.add('bounce');
 }
 
@@ -659,7 +654,6 @@ function loadData() {
     console.warn('Erro ao carregar localStorage:', e);
   }
 }
-
 
 
 
