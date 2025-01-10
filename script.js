@@ -107,6 +107,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // IMPORTANTE: Vincular o clique do botão "confirmWelcomeBtn" à função confirmUserName
+  if (confirmWelcomeBtn) {
+    confirmWelcomeBtn.addEventListener('click', confirmUserName);
+  }
+
   // Overlay: fecha todos os modais, MENOS o modal de parabéns
   overlay.addEventListener('click', () => {
     // Se o modal de parabéns estiver aberto, não faz nada
@@ -430,14 +435,11 @@ function resetDailyProgressIfNeeded() {
   let updated = false;
 
   habits.forEach(habit => {
-    // Se lastCheckDate não for hoje e não completou o hábito,
-    // zera apenas se o dia REALMENTE mudou
+    // Se lastCheckDate não for hoje,
+    // zera se o dia REALMENTE mudou
     if (habit.lastCheckDate !== todayStr) {
-      // Se o hábito foi feito (progress >= goal), 
-      // mantemos? 
-      // (Depende da sua lógica, mas assumimos que um dia novo -> zera tudo
-      // exceto streak/bestStreak.)
       habit.progress = 0;
+      // Mantemos streak/bestStreak; 
       updated = true;
     }
   });
@@ -466,9 +468,6 @@ function incrementProgress(habitId) {
   vibrateShort();
   const todayStr = getLocalDateStr();
 
-  // Se for outro dia, atualiza lastCheckDate 
-  // mesmo que ainda não tenha completado a meta.
-  // Assim, não resetamos esse progress ao recarregar.
   if (habit.lastCheckDate !== todayStr) {
     habit.lastCheckDate = todayStr;
   }
@@ -478,14 +477,13 @@ function incrementProgress(habitId) {
 
   // Se completou o hábito
   if (habit.progress >= habit.goal) {
-    // Somente agora consideramos streak
     if (isLocalYesterday(habit.lastCheckDate, todayStr)) {
       habit.streak++;
     } else if (habit.lastCheckDate !== todayStr) {
       habit.streak = 1;
     }
 
-    // Caso ainda não tivesse sido setado (só por segurança)
+    // assegura que lastCheckDate = hoje
     habit.lastCheckDate = todayStr;
 
     if (habit.streak > habit.bestStreak) {
@@ -559,7 +557,7 @@ function levelUp() {
 
 /** Modal de Parabéns */
 function showCongratulationsModal(currentLevel) {
-  // index do array
+  // índice do array
   const idx = (currentLevel / 5) - 1;
   const msg = motivationalMessages[idx] ||
     "Você é incrível! Continue firme e supere seus próprios recordes!";
@@ -660,7 +658,6 @@ function loadData() {
     console.warn('Erro ao carregar localStorage:', e);
   }
 }
-
 
 
 function resetAllData() {
