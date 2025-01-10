@@ -791,8 +791,6 @@ img {
 }
 
 
-
-
 /* ========== MEDIA QUERIES ========== */
 /* Se a largura for acima de 720px, exibimos a mensagem e ocultamos a aplicação */
 @media (min-width: 721px) {

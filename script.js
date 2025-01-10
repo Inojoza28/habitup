@@ -62,6 +62,7 @@ const motivationalMessages = [
   "Brilhante! A cada vitória, você prova do que é capaz."
 ];
 
+
 /**
  * Estrutura de dados (exemplo):
  * habits = [
@@ -658,6 +659,8 @@ function loadData() {
     console.warn('Erro ao carregar localStorage:', e);
   }
 }
+
+
 
 
 function resetAllData() {
