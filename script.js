@@ -657,27 +657,27 @@ function loadData() {
 
 
 
-function resetAllData() {
-  // Zera o array de hábitos
-  habits.forEach(habit => {
-    habit.progress = 0;
-    habit.streak = 0;
-    habit.bestStreak = 0;
-    habit.lastCheckDate = '';
-  });
-  // Zera o XP / Nível
-  currentXp = 0;
-  xpToNextLevel = 50;
-  level = 1;
-  // (Opcional) Zera o nome do usuário, se quiser testar do início
-  userName = '';
+// function resetAllData() {
+//   // Zera o array de hábitos
+//   habits.forEach(habit => {
+//     habit.progress = 0;
+//     habit.streak = 0;
+//     habit.bestStreak = 0;
+//     habit.lastCheckDate = '';
+//   });
+//   // Zera o XP / Nível
+//   currentXp = 0;
+//   xpToNextLevel = 50;
+//   level = 1;
+//   // (Opcional) Zera o nome do usuário, se quiser testar do início
+//   userName = '';
 
-  // Salva mudanças e re-renderiza
-  saveData();
-  renderHabits();
-  updateXpUI();
-  checkUserName(); // se quiser resetar o nome, basta remover do localStorage também
-  console.log('Todos os dados foram zerados!');
-}
+//   // Salva mudanças e re-renderiza
+//   saveData();
+//   renderHabits();
+//   updateXpUI();
+//   checkUserName(); // se quiser resetar o nome, basta remover do localStorage também
+//   console.log('Todos os dados foram zerados!');
+// }
 
 // Para ativar: resetAllData()
