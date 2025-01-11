@@ -259,17 +259,18 @@ function renderHabits() {
       placeholderEl = null;
     });
 
-    // Marca visualmente se completou hoje
+    // Indica visualmente se está completo hoje
     if (habit.progress >= habit.goal) {
       li.classList.add('completed-today');
     } else {
       li.classList.remove('completed-today');
     }
 
-    // Topo do item
+    // Parte superior do item
     const topDiv = document.createElement('div');
     topDiv.className = 'habit-top';
 
+    // Info do hábito (ícone + nome)
     const infoDiv = document.createElement('div');
     infoDiv.className = 'habit-info';
 
@@ -284,7 +285,7 @@ function renderHabits() {
     infoDiv.appendChild(iconSpan);
     infoDiv.appendChild(nameSpan);
 
-    // Ações: Feito/Editar/Excluir
+    // Ações (botões Feito/Editar/Excluir)
     const actionsDiv = document.createElement('div');
     actionsDiv.className = 'habit-actions';
 
@@ -330,6 +331,7 @@ function renderHabits() {
     progressBar.className = 'habit-progress-bar';
     const progressFill = document.createElement('div');
     progressFill.className = 'habit-progress-fill';
+
     const pct = ((habit.progress / habit.goal) * 100).toFixed(0);
     progressFill.style.width = (pct > 100 ? 100 : pct) + '%';
     progressBar.appendChild(progressFill);
@@ -346,7 +348,7 @@ function renderHabits() {
     detailsDiv.appendChild(pStreak);
     detailsDiv.appendChild(pBestStreak);
 
-    // Mostra/oculta detalhes ao clicar no topo
+    // Ao clicar na parte superior, expande/colapsa detalhes
     topDiv.addEventListener('click', () => {
       detailsDiv.style.display = 
         (detailsDiv.style.display === 'flex') ? 'none' : 'flex';
@@ -433,9 +435,8 @@ function resetDailyProgressIfNeeded() {
   let updated = false;
 
   habits.forEach(habit => {
-    // Se lastCheckDate for != hoje, significa dia mudou
+    // Se lastCheckDate não for hoje, zera progress
     if (habit.lastCheckDate !== todayStr) {
-      // Zera apenas o progress
       habit.progress = 0;
       updated = true;
     }
@@ -448,40 +449,45 @@ function resetDailyProgressIfNeeded() {
 }
 
 /** 
- * incrementProgress:
- *   - incrementamos progress parcial
- *   - se progress >= goal => concluímos hoje e incrementamos streak
+ * incrementProgress: 
+ * - Se completou meta, aumenta streak e bestStreak
  */
 function incrementProgress(habitId) {
   const habit = habits.find(h => h.id == habitId);
   if (!habit) return;
 
+  // Se já completou hoje, não faz nada
   if (habit.progress >= habit.goal) {
     alert('Você já atingiu a meta deste hábito hoje!');
     return;
   }
 
   vibrateShort();
+  const todayStr = getLocalDateStr();
+
+  // Atualiza lastCheckDate se for outro dia
+  if (habit.lastCheckDate !== todayStr) {
+    habit.lastCheckDate = todayStr;
+  }
+
+  // Incrementa progress parcial
   habit.progress++;
   addXp(10);
 
-  const todayStr = getLocalDateStr();
-
-  // Se completou a meta
+  // Se completou a meta hoje
   if (habit.progress >= habit.goal) {
-    // Se lastCheckDate for ontem => streak++
+    // Verifica se ontem estava completo
     if (isLocalYesterday(habit.lastCheckDate, todayStr)) {
       habit.streak++;
     } 
-    // Se era outro dia distante => zera e começa em 1
+    // Se lastCheckDate for mais antigo, começa streak em 1
     else if (habit.lastCheckDate !== todayStr) {
       habit.streak = 1;
     }
-
-    // Marca a data de conclusão
+    // Garante data atual
     habit.lastCheckDate = todayStr;
 
-    // Atualiza bestStreak se for maior
+    // Atualiza bestStreak
     if (habit.streak > habit.bestStreak) {
       habit.bestStreak = habit.streak;
     }
@@ -581,7 +587,7 @@ function updateXpUI() {
 
 function bounceMascot() {
   mascotImg.classList.remove('bounce');
-  void mascotImg.offsetWidth; 
+  void mascotImg.offsetWidth;
   mascotImg.classList.add('bounce');
 }
 
@@ -656,28 +662,27 @@ function loadData() {
 }
 
 
+function resetAllData() {
+  // Zera o array de hábitos
+  habits.forEach(habit => {
+    habit.progress = 0;
+    habit.streak = 0;
+    habit.bestStreak = 0;
+    habit.lastCheckDate = '';
+  });
+  // Zera o XP / Nível
+  currentXp = 0;
+  xpToNextLevel = 50;
+  level = 1;
+  // (Opcional) Zera o nome do usuário, se quiser testar do início
+  userName = '';
 
-// function resetAllData() {
-//   // Zera o array de hábitos
-//   habits.forEach(habit => {
-//     habit.progress = 0;
-//     habit.streak = 0;
-//     habit.bestStreak = 0;
-//     habit.lastCheckDate = '';
-//   });
-//   // Zera o XP / Nível
-//   currentXp = 0;
-//   xpToNextLevel = 50;
-//   level = 1;
-//   // (Opcional) Zera o nome do usuário, se quiser testar do início
-//   userName = '';
-
-//   // Salva mudanças e re-renderiza
-//   saveData();
-//   renderHabits();
-//   updateXpUI();
-//   checkUserName(); // se quiser resetar o nome, basta remover do localStorage também
-//   console.log('Todos os dados foram zerados!');
-// }
+  // Salva mudanças e re-renderiza
+  saveData();
+  renderHabits();
+  updateXpUI();
+  checkUserName(); // se quiser resetar o nome, basta remover do localStorage também
+  console.log('Todos os dados foram zerados!');
+}
 
 // Para ativar: resetAllData()
