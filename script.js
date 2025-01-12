@@ -433,20 +433,22 @@ function reorderHabits(draggedHabitId, afterElement) {
 function resetDailyProgressIfNeeded() {
   const todayStr = getLocalDateStr();
   let updated = false;
-
+  
   habits.forEach(habit => {
-    // Se lastCheckDate não for hoje, zera progress
+    // Se o hábito não foi completado hoje, reinicia progress e streak
     if (habit.lastCheckDate !== todayStr) {
       habit.progress = 0;
+      habit.streak = 0; // reinicia a streak para este novo dia
       updated = true;
     }
   });
-
+  
   if (updated) {
     saveData();
     renderHabits();
   }
 }
+
 
 /** 
  * incrementProgress: 
@@ -463,43 +465,39 @@ function incrementProgress(habitId) {
   }
 
   vibrateShort();
-  const todayStr = getLocalDateStr();
-
-  // Atualiza lastCheckDate se for outro dia
-  if (habit.lastCheckDate !== todayStr) {
-    habit.lastCheckDate = todayStr;
-  }
-
-  // Incrementa progress parcial
+  
+  // Incrementa o progresso parcial
   habit.progress++;
   addXp(10);
-
-  // Se completou a meta hoje
-  if (habit.progress >= habit.goal) {
-    // Verifica se ontem estava completo
-    if (isLocalYesterday(habit.lastCheckDate, todayStr)) {
+  
+  const todayStr = getLocalDateStr();
+  
+  // Sempre atualiza a data para impedir o reset diário de apagar o progresso parcial
+  habit.lastCheckDate = todayStr;
+  
+  // Se o hábito foi completado (apenas no exato momento da conclusão)
+  if (habit.progress === habit.goal) {
+    // Atualiza a streak somente ao concluir:
+    if (habit.lastCheckDate && isLocalYesterday(habit.lastCheckDate, todayStr)) {
       habit.streak++;
-    } 
-    // Se lastCheckDate for mais antigo, começa streak em 1
-    else if (habit.lastCheckDate !== todayStr) {
+    } else {
       habit.streak = 1;
     }
-    // Garante data atual
-    habit.lastCheckDate = todayStr;
-
-    // Atualiza bestStreak
+    // lastCheckDate já foi atualizado acima para hoje
+    
     if (habit.streak > habit.bestStreak) {
       habit.bestStreak = habit.streak;
     }
-
-    // XP Bônus
+    
+    // Aplica XP bônus e feedback visual de conclusão
     addXp(10);
     runConfetti();
   }
-
+  
   saveData();
   renderHabits();
 }
+
 
 /** Vibração curta */
 function vibrateShort() {
