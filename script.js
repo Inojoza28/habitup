@@ -433,21 +433,20 @@ function reorderHabits(draggedHabitId, afterElement) {
 function resetDailyProgressIfNeeded() {
   const todayStr = getLocalDateStr();
   let updated = false;
-  
   habits.forEach(habit => {
-    // Se o hábito não foi completado hoje, reinicia progress e streak
+    // Se lastCheckDate não for igual a hoje, significa que o hábito NÃO foi completado hoje
     if (habit.lastCheckDate !== todayStr) {
       habit.progress = 0;
-      habit.streak = 0; // reinicia a streak para este novo dia
+      habit.streak = 0; // Zera a streak se o hábito não foi concluído hoje
       updated = true;
     }
   });
-  
   if (updated) {
     saveData();
     renderHabits();
   }
 }
+
 
 
 /** 
@@ -458,7 +457,6 @@ function incrementProgress(habitId) {
   const habit = habits.find(h => h.id == habitId);
   if (!habit) return;
 
-  // Se já completou hoje, não faz nada
   if (habit.progress >= habit.goal) {
     alert('Você já atingiu a meta deste hábito hoje!');
     return;
@@ -472,28 +470,31 @@ function incrementProgress(habitId) {
   
   const todayStr = getLocalDateStr();
   
-  // Sempre atualiza a data para impedir o reset diário de apagar o progresso parcial
+  // Atualiza o lastCheckDate a cada clique para salvar a data de interação
   habit.lastCheckDate = todayStr;
   
-  // Se o hábito foi completado (apenas no exato momento da conclusão)
+  // Se o hábito for COMPLETO exatamente (quando progress atinge a meta)
   if (habit.progress === habit.goal) {
-    // Atualiza a streak somente ao concluir:
+    // Verifica se o hábito foi completado ontem para manter a sequência
     if (habit.lastCheckDate && isLocalYesterday(habit.lastCheckDate, todayStr)) {
       habit.streak++;
     } else {
       habit.streak = 1;
     }
-    // lastCheckDate já foi atualizado acima para hoje
     
+    // Garante que a data de conclusão seja a de hoje
+    habit.lastCheckDate = todayStr;
+    
+    // Atualiza a melhor sequência se necessário
     if (habit.streak > habit.bestStreak) {
       habit.bestStreak = habit.streak;
     }
     
-    // Aplica XP bônus e feedback visual de conclusão
+    // XP bônus e feedback visual
     addXp(10);
     runConfetti();
   }
-  
+
   saveData();
   renderHabits();
 }
