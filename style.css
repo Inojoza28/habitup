@@ -791,7 +791,7 @@ img {
 }
 
 /* Estilo básico para o botão de reset */
-#resetButton {
+/* #resetButton {
   padding: 10px 20px;
   background-color: #ff4d4d;
   color: white;
@@ -804,7 +804,7 @@ img {
 
 #resetButton:hover {
   background-color: #e63939;
-}
+} */
 
 /* Modal de Notificação de Nível com Troféu */
 .trophy-notification {
