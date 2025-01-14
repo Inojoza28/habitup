@@ -562,16 +562,23 @@ function levelUp() {
 // Função para exibir a notificação de troféu com "+1"
 function showTrophyNotification() {
   const notif = document.getElementById('trophyNotification');
-  // Remove a classe que oculta e aplica a animação
+  
+  // Reproduz a trilha sonora
+  const levelSound = document.getElementById('levelSound');
+  if (levelSound) {
+    levelSound.currentTime = 0;
+    levelSound.play();
+  }
+  
   notif.classList.remove('hidden');
   notif.style.animation = 'slideUp 3s forwards';
   
-  // Após a animação (1s), oculta novamente e reseta a animação
   setTimeout(() => {
     notif.classList.add('hidden');
     notif.style.animation = '';
   }, 3000);
 }
+
 
 
 /** Modal de Parabéns */
