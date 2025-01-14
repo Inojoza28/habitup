@@ -811,19 +811,18 @@ img {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background: var(--color-white);
-  border: 1px solid var(--color-border);
-  padding: 0.75rem 1.25rem;
-  border-radius: var(--radius-base);
+  background: #fbc531e7;
+  /* border: 1px solid var(--color-border); */
+  padding: 0.8rem 1.5rem;
+  border-radius: calc(var(--radius-base) + 6px);
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  gap: 0.2rem;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
   z-index: 2000;
   font-family: var(--font-primary);
-  color: var(--color-primary);
+  color: #FFF;
   font-weight: bold;
-  /* Texto e elementos leves para remeter ao design clean */
   transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
