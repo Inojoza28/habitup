@@ -791,7 +791,7 @@ img {
 }
 
 /* Estilo básico para o botão de reset */
-#resetButton {
+/* #resetButton {
   padding: 10px 20px;
   background-color: #ff4d4d;
   color: white;
@@ -804,22 +804,27 @@ img {
 
 #resetButton:hover {
   background-color: #e63939;
-}
+} */
 
 /* Modal de Notificação de Nível com Troféu */
 .trophy-notification {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid #eee;
-  padding: 0.5rem 1rem;
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  padding: 0.75rem 1.25rem;
   border-radius: var(--radius-base);
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
   z-index: 2000;
+  font-family: var(--font-primary);
+  color: var(--color-primary);
+  font-weight: bold;
+  /* Texto e elementos leves para remeter ao design clean */
+  transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
 @keyframes slideUp {
