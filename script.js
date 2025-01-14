@@ -448,7 +448,6 @@ function resetDailyProgressIfNeeded() {
 }
 
 
-
 /** 
  * incrementProgress: 
  * - Se completou meta, aumenta streak e bestStreak
@@ -547,15 +546,33 @@ function levelUp() {
   xpToNextLevel = Math.floor(xpToNextLevel * 1.3);
   bounceMascot();
   runConfetti();
+  
+  // Chama a notificação de troféu para cada nível completado.
+  showTrophyNotification();
 
-  // Se nível for múltiplo de 5 => mostra modal
+  // Se o nível for múltiplo de 5, mostra o modal de parabéns (mantém-se o comportamento original)
   if (level % 5 === 0) {
     showCongratulationsModal(level);
   }
-
+  
   saveData();
   updateXpUI();
 }
+
+// Função para exibir a notificação de troféu com "+1"
+function showTrophyNotification() {
+  const notif = document.getElementById('trophyNotification');
+  // Remove a classe que oculta e aplica a animação
+  notif.classList.remove('hidden');
+  notif.style.animation = 'slideUp 2.5s forwards';
+  
+  // Após a animação (1s), oculta novamente e reseta a animação
+  setTimeout(() => {
+    notif.classList.add('hidden');
+    notif.style.animation = '';
+  }, 2500);
+}
+
 
 /** Modal de Parabéns */
 function showCongratulationsModal(currentLevel) {

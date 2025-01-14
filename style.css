@@ -790,6 +790,59 @@ img {
   margin: 0.4rem;
 }
 
+/* Estilo básico para o botão de reset */
+#resetButton {
+  padding: 10px 20px;
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+#resetButton:hover {
+  background-color: #e63939;
+}
+
+/* Modal de Notificação de Nível com Troféu */
+.trophy-notification {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #eee;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-base);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  z-index: 2000;
+}
+
+@keyframes slideUp {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  60% {
+    transform: translateY(-80px);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-80px);
+    opacity: 0;
+  }
+}
+
+
+.trophy-notification {
+  /* ... suas demais propriedades ... */
+  animation: slideUp 2.5s forwards; /* duração 1.5s em vez de 1s */
+}
+
 
 /* ========== MEDIA QUERIES ========== */
 /* Se a largura for acima de 720px, exibimos a mensagem e ocultamos a aplicação */
