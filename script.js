@@ -786,13 +786,11 @@ function toggleDailyReminder() {
   const toggleBtn = document.getElementById('notificationToggle');
   if (!remindersActive) {
     if (confirm("Deseja ativar o lembrete diário para registrar seus hábitos?")) {
-      // Se a permissão não foi concedida, solicita
       if ("Notification" in window && Notification.permission !== "granted" && Notification.permission !== "denied") {
         Notification.requestPermission().then(permission => {
           if (permission === "granted") {
             remindersActive = true;
             scheduleDailyReminder();
-            // Atualiza o botão para ativado: ícone sem traço e com classe active (amarelo)
             toggleBtn.innerHTML = '<i class="fa-solid fa-bell"></i>';
             toggleBtn.classList.add('active');
             localStorage.setItem('reminderMode', 'enabled');
@@ -812,7 +810,6 @@ function toggleDailyReminder() {
       if (reminderTimeoutId) {
         clearTimeout(reminderTimeoutId);
       }
-      // Atualiza o botão para desativado: ícone com traço e remove classe active
       toggleBtn.innerHTML = '<i class="fa-solid fa-bell-slash"></i>';
       toggleBtn.classList.remove('active');
       localStorage.setItem('reminderMode', 'disabled');
@@ -820,9 +817,22 @@ function toggleDailyReminder() {
   }
 }
 
-// Vincula o evento de clique ao botão de notificação ao carregar o DOM
+// Ao carregar o DOM, lê o estado salvo e vincula o evento ao botão
 document.addEventListener('DOMContentLoaded', () => {
   const toggleBtn = document.getElementById('notificationToggle');
+
+  // Verifica no localStorage se o lembrete estava ativado
+  const savedMode = localStorage.getItem('reminderMode') || 'disabled';
+  if (savedMode === 'enabled') {
+    remindersActive = true;
+    scheduleDailyReminder();
+    toggleBtn.innerHTML = '<i class="fa-solid fa-bell"></i>';
+    toggleBtn.classList.add('active');
+  } else {
+    toggleBtn.innerHTML = '<i class="fa-solid fa-bell-slash"></i>';
+  }
+
   toggleBtn.addEventListener('click', toggleDailyReminder);
 });
+
 
