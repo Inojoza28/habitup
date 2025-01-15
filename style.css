@@ -880,3 +880,38 @@ img {
     display: block;
   }
 }
+
+
+
+
+
+
+.intro-section {
+  position: relative;
+  /* O restante das regras da sua section permanece */
+}
+
+/* Posicionamento e estilização do botão de sininho dentro da .intro-section */
+.intro-section #notificationToggle {
+  position: absolute;
+  top: 20px;         /* Ajuste conforme necessário */
+  right: 18px;       /* Ajuste conforme necessário */
+  background: transparent;
+  border: none;
+  font-size: 1.4rem; /* Botão um pouco menor */
+  cursor: pointer;
+  z-index: 2;        /* Acima do pseudo-elemento ::before */
+  color: rgba(255, 255, 255, 0.452);
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+/* Estado de hover */
+.intro-section #notificationToggle:hover {
+  transform: scale(1.1);
+  color: var(--color-secondary);
+}
+
+/* Estado ativo: quando o lembrete está ativado, o ícone muda para sininho sem traço e fica amarelo */
+.intro-section #notificationToggle.active {
+  color: #ffd700; /* Cor amarela para indicar que o lembrete está ativado */
+}

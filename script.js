@@ -727,3 +727,102 @@ function resetAllData() {
   console.log('Todos os dados foram zerados!');
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+// Variáveis globais para controlar o lembrete diário
+let remindersActive = false;
+let reminderTimeoutId = null;
+
+// Função que agenda o lembrete diário para as 20:00
+function scheduleDailyReminder() {
+  const now = new Date();
+  const reminderTime = new Date();
+  reminderTime.setHours(20, 0, 0, 0); // Define para as 20:00
+
+  let timeToReminder = reminderTime - now;
+  if (timeToReminder < 0) {
+    // Se já passou, agenda para amanhã (24h = 86400000 ms)
+    timeToReminder += 86400000;
+  }
+
+  reminderTimeoutId = setTimeout(() => {
+    // Verifica se a API de Notificações está disponível
+    if ('Notification' in window) {
+      if (Notification.permission === "granted") {
+        new Notification("Hora de registrar seus hábitos!", {
+          body: "Não se esqueça de atualizar seus hábitos hoje.",
+          icon: "path/to/icon.png" // Ajuste o caminho para o seu ícone
+        });
+      } else if (Notification.permission !== "denied") {
+        Notification.requestPermission().then(permission => {
+          if (permission === "granted") {
+            new Notification("Hora de registrar seus hábitos!", {
+              body: "Não se esqueça de atualizar seus hábitos hoje.",
+              icon: "path/to/icon.png"
+            });
+          }
+        });
+      }
+    }
+    // Reagenda o lembrete somente se ainda estiver ativo
+    if (remindersActive) {
+      scheduleDailyReminder();
+    }
+  }, timeToReminder);
+}
+
+// Função para ativar/desativar o lembrete diário com confirmação
+function toggleDailyReminder() {
+  const toggleBtn = document.getElementById('notificationToggle');
+  if (!remindersActive) {
+    if (confirm("Deseja ativar o lembrete diário para registrar seus hábitos?")) {
+      // Se a permissão não foi concedida, solicita
+      if ("Notification" in window && Notification.permission !== "granted" && Notification.permission !== "denied") {
+        Notification.requestPermission().then(permission => {
+          if (permission === "granted") {
+            remindersActive = true;
+            scheduleDailyReminder();
+            // Atualiza o botão para ativado: ícone sem traço e com classe active (amarelo)
+            toggleBtn.innerHTML = '<i class="fa-solid fa-bell"></i>';
+            toggleBtn.classList.add('active');
+            localStorage.setItem('reminderMode', 'enabled');
+          }
+        });
+      } else if ("Notification" in window && Notification.permission === "granted") {
+        remindersActive = true;
+        scheduleDailyReminder();
+        toggleBtn.innerHTML = '<i class="fa-solid fa-bell"></i>';
+        toggleBtn.classList.add('active');
+        localStorage.setItem('reminderMode', 'enabled');
+      }
+    }
+  } else {
+    if (confirm("Deseja desativar o lembrete diário?")) {
+      remindersActive = false;
+      if (reminderTimeoutId) {
+        clearTimeout(reminderTimeoutId);
+      }
+      // Atualiza o botão para desativado: ícone com traço e remove classe active
+      toggleBtn.innerHTML = '<i class="fa-solid fa-bell-slash"></i>';
+      toggleBtn.classList.remove('active');
+      localStorage.setItem('reminderMode', 'disabled');
+    }
+  }
+}
+
+// Vincula o evento de clique ao botão de notificação ao carregar o DOM
+document.addEventListener('DOMContentLoaded', () => {
+  const toggleBtn = document.getElementById('notificationToggle');
+  toggleBtn.addEventListener('click', toggleDailyReminder);
+});
+
