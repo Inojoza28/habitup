@@ -898,7 +898,7 @@ img {
   right: 18px;       /* Ajuste conforme necessário */
   background: transparent;
   border: none;
-  font-size: 1.4rem; /* Botão um pouco menor */
+  font-size: 1.2rem; /* Botão um pouco menor */
   cursor: pointer;
   z-index: 2;        /* Acima do pseudo-elemento ::before */
   color: rgba(255, 255, 255, 0.452);
