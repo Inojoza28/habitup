@@ -791,20 +791,23 @@ img {
 }
 
 /* Estilo básico para o botão de reset */
-/* #resetButton {
-  padding: 10px 20px;
-  background-color: #ff4d4d;
-  color: white;
-  border: none;
-  border-radius: 5px;
+#resetButton {
+  padding: 6px 12px;
+  background-color: transparent;
+  color: var(--color-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  margin-top: 15px;
   cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 #resetButton:hover {
-  background-color: #e63939;
-} */
+  background-color: var(--color-bg);
+  color: var(--color-secondary);
+}
+
 
 /* Modal de Notificação de Nível com Troféu */
 .trophy-notification {

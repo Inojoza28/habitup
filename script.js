@@ -559,7 +559,7 @@ function levelUp() {
   updateXpUI();
 }
 
-// Função para exibir a notificação de troféu com "+1"
+// Função para exibir a notificação de troféu com "+1" COM áudio
 function showTrophyNotification() {
   const notif = document.getElementById('trophyNotification');
   
@@ -579,6 +579,19 @@ function showTrophyNotification() {
   }, 3000);
 }
 
+// Função para exibir a notificação de troféu com "+1" SEM áudio
+// function showTrophyNotification() {
+//   const notif = document.getElementById('trophyNotification');
+//   // Remove a classe que oculta e aplica a animação
+//   notif.classList.remove('hidden');
+//   notif.style.animation = 'slideUp 3s forwards';
+  
+//   // Após a animação (1s), oculta novamente e reseta a animação
+//   setTimeout(() => {
+//     notif.classList.add('hidden');
+//     notif.style.animation = '';
+//   }, 3000);
+// }
 
 
 /** Modal de Parabéns */
@@ -686,6 +699,11 @@ function loadData() {
 
 
 function resetAllData() {
+  
+  if (!confirm("Você realmente deseja resetar todos os dados? Essa ação é irreversível!")) {
+    return;
+  }
+  
   // Zera o array de hábitos
   habits.forEach(habit => {
     habit.progress = 0;
@@ -697,15 +715,15 @@ function resetAllData() {
   currentXp = 0;
   xpToNextLevel = 50;
   level = 1;
-  // (Opcional) Zera o nome do usuário, se quiser testar do início
+  // (Opcional) Zera o nome do usuário, se desejar reiniciar do início
   userName = '';
-
-  // Salva mudanças e re-renderiza
+  
+  // Salva as mudanças e re-renderiza
   saveData();
   renderHabits();
   updateXpUI();
-  checkUserName(); // se quiser resetar o nome, basta remover do localStorage também
+  checkUserName(); // Se quiser resetar o nome, pode removê-lo também do localStorage
+  
   console.log('Todos os dados foram zerados!');
 }
 
-// Para ativar: resetAllData()

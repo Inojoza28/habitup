@@ -7,6 +7,7 @@
   <meta name="description" content="Gerencie seus hábitos de forma divertida e motivacional. Ganhe XP, evolua de nível e conquiste suas metas diárias. HabitUp é simples, direto e cheio de conquistas!">
   <!-- Meta Keywords -->
   <meta name="keywords" content="hábitos, xp, gamificação, rotina, produtividade, metas, evolução, motivação">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <title>HabitUp - Evolua seus Hábitos</title>
   <link rel="icon" href="imgs/Logo.png">
   <link rel="stylesheet" href="style.css" />
@@ -84,9 +85,12 @@
           <span id="currentXp">0</span> / <span id="xpToNextLevel">50</span> XP
         </p>
       </div>
+          <!-- Botão de reset -->
+          <button id="resetButton" onclick="resetAllData()">
+            <i class="fas fa-lock"></i>&nbsp;  Resetar Todos os Dados
+          </button>          
     </section>
-    <!-- Botão de reset -->
-    <!-- <button id="resetButton" onclick="resetAllData()">Resetar Todos os Dados</button> -->
+
 
   </main>
 
@@ -101,7 +105,7 @@
       <li><a href="https://aibfinance.com.br" target="_blank">
         Gerencie o seu dinheiro
       </a></li>
-      <li><a href="https://inojoza28.github.io/motivation" target="_blank">
+      <li><a href="https://inojoza28.github.io/motivacao" target="_blank">
         Veja frases motivacionais todos os dias
       </a></li>
     </ul>
