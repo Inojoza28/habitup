@@ -761,14 +761,14 @@ function scheduleDailyReminder() {
       if (Notification.permission === "granted") {
         new Notification("Hora de registrar seus hábitos!", {
           body: "Não se esqueça de atualizar seus hábitos hoje.",
-          icon: "path/to/icon.png" // Ajuste o caminho para o seu ícone
+          icon: "imgs/logo-habitup.png" // Ajuste o caminho para o seu ícone
         });
       } else if (Notification.permission !== "denied") {
         Notification.requestPermission().then(permission => {
           if (permission === "granted") {
             new Notification("Hora de registrar seus hábitos!", {
               body: "Não se esqueça de atualizar seus hábitos hoje.",
-              icon: "path/to/icon.png"
+              icon: "imgs/logo-habitup.png"
             });
           }
         });
