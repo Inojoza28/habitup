@@ -208,10 +208,51 @@ function saveHabit() {
 
   if (editingHabitId) {
     const idx = habits.findIndex(h => h.id == editingHabitId);
+  
+    const oldGoal = habits[idx].goal;
+    const oldProgress = habits[idx].progress;
+    const oldStreak = habits[idx].streak;
+    const oldLastCheckDate = habits[idx].lastCheckDate; // se necessário
+  
+    // 1) Impedir reduzir meta para abaixo do progresso atual
+    if (oldProgress > 0 && goal < oldProgress) {
+      alert(
+        `Você já atingiu um progresso de ${oldProgress} hoje.
+  Por isso, a meta não pode ser definida para um valor menor que ${oldProgress}.`
+      );
+      return;
+    }
+  
+    // 2) Se o hábito foi "completado hoje" e agora o usuário
+    //    aumenta a meta, revertendo o dia para "incompleto".
+    const todayStr = getLocalDateStr();
+    const completedHoje = (oldProgress >= oldGoal && oldLastCheckDate === todayStr);
+  
     habits[idx].name = name;
     habits[idx].icon = icon;
     habits[idx].goal = goal;
+  
+    if (completedHoje && goal > oldGoal) {
+      // O usuário completou a meta anterior hoje, mas agora a meta é maior.
+      // Volta para "incompleto" e reverte a streak incrementada.
+      // Exemplo simples: progress fica oldGoal - 1 ou zero, e streak = oldStreak - 1.
+      // Ajuste conforme a sua lógica (p.ex. se meta antiga era 3, define progress = 2).
+      habits[idx].progress = Math.max(oldGoal - 1, 0);
+  
+      // Se a streak foi incrementada no momento que completou
+      // revertê-la apenas se oldStreak > 0 (para não ficar negativo)
+      if (oldStreak > 0) {
+        habits[idx].streak = oldStreak - 1;
+      }
+  
+      // Se esse "completar" concedeu XP extra, você poderia
+      // remover essa XP a mais, se quiser ser totalmente rigoroso.
+      // Ex.: currentXp -= 10 (apenas se você tiver rastreado que concedeu +10 de XP ao completar).
+      // Nesse caso, lembre-se de re-renderizar e salvar.
+    }
+  
   } else {
+    // Criação normal de um novo hábito (mantém sua lógica atual)
     const newHabit = {
       id: Date.now(),
       name,
@@ -224,6 +265,7 @@ function saveHabit() {
     };
     habits.push(newHabit);
   }
+  
 
   saveData();
   renderHabits();
@@ -434,10 +476,12 @@ function resetDailyProgressIfNeeded() {
   const todayStr = getLocalDateStr();
   let updated = false;
   habits.forEach(habit => {
-    // Se lastCheckDate não for igual a hoje, significa que o hábito NÃO foi completado hoje
+    // Se lastCheckDate não for igual a hoje, habit.progress volta a 0
+    // (Streak NÃO é zerada aqui; apenas o progresso)
     if (habit.lastCheckDate !== todayStr) {
       habit.progress = 0;
-      habit.streak = 0; // Zera a streak se o hábito não foi concluído hoje
+      // Remover ou comentar a linha abaixo para NÃO zerar streak automaticamente:
+      // habit.streak = 0; // <- Remova esta linha
       updated = true;
     }
   });
@@ -463,33 +507,34 @@ function incrementProgress(habitId) {
 
   vibrateShort();
   
-  // Incrementa o progresso parcial
+  // Incrementa progresso parcial
   habit.progress++;
   addXp(10);
-  
+
   const todayStr = getLocalDateStr();
-  
-  // Atualiza o lastCheckDate a cada clique para salvar a data de interação
+
+  // Atualiza lastCheckDate SEMPRE que incrementa,
+  // para que o progresso parcial seja mantido se recarregar a página no mesmo dia
   habit.lastCheckDate = todayStr;
-  
-  // Se o hábito for COMPLETO exatamente (quando progress atinge a meta)
+
+  // Verifica se agora atingiu a meta
   if (habit.progress === habit.goal) {
-    // Verifica se o hábito foi completado ontem para manter a sequência
-    if (habit.lastCheckDate && isLocalYesterday(habit.lastCheckDate, todayStr)) {
-      habit.streak++;
-    } else {
-      habit.streak = 1;
+    // Checar se houve "falha" de 1 dia para streak
+    if (habit.lastCheckDate) {
+      const lastDate = new Date(habit.lastCheckDate + 'T00:00:00');
+      const todayDate = new Date(todayStr + 'T00:00:00');
+      const diffInDays = (todayDate - lastDate) / 86400000;
+      if (diffInDays > 1) {
+        habit.streak = 0;
+      }
     }
-    
-    // Garante que a data de conclusão seja a de hoje
-    habit.lastCheckDate = todayStr;
-    
-    // Atualiza a melhor sequência se necessário
+    // Agora incrementamos a streak
+    habit.streak++;
     if (habit.streak > habit.bestStreak) {
       habit.bestStreak = habit.streak;
     }
-    
-    // XP bônus e feedback visual
+
+    // XP bônus extra e efeito visual (confetti)
     addXp(10);
     runConfetti();
   }
@@ -497,6 +542,7 @@ function incrementProgress(habitId) {
   saveData();
   renderHabits();
 }
+
 
 
 /** Vibração curta */
