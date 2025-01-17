@@ -212,7 +212,7 @@ function saveHabit() {
     const oldGoal = habits[idx].goal;
     const oldProgress = habits[idx].progress;
     const oldStreak = habits[idx].streak;
-    const oldLastCheckDate = habits[idx].lastCheckDate; // se necessário
+    const oldLastCheckDate = habits[idx].lastCheckDate;
   
     // 1) Impedir reduzir meta para abaixo do progresso atual
     if (oldProgress > 0 && goal < oldProgress) {
@@ -223,9 +223,8 @@ function saveHabit() {
       return;
     }
   
-    // 2) Se o hábito foi "completado hoje" e agora o usuário
-    //    aumenta a meta, revertendo o dia para "incompleto".
     const todayStr = getLocalDateStr();
+    // Hábito concluído hoje e agora a meta está sendo aumentada
     const completedHoje = (oldProgress >= oldGoal && oldLastCheckDate === todayStr);
   
     habits[idx].name = name;
@@ -233,26 +232,28 @@ function saveHabit() {
     habits[idx].goal = goal;
   
     if (completedHoje && goal > oldGoal) {
-      // O usuário completou a meta anterior hoje, mas agora a meta é maior.
-      // Volta para "incompleto" e reverte a streak incrementada.
-      // Exemplo simples: progress fica oldGoal - 1 ou zero, e streak = oldStreak - 1.
-      // Ajuste conforme a sua lógica (p.ex. se meta antiga era 3, define progress = 2).
-      habits[idx].progress = Math.max(oldGoal - 1, 0);
+      // Remova (ou comente) a linha que subtraía 1 do oldProgress:
+      // habits[idx].progress = Math.max(oldGoal - 1, 0);
   
-      // Se a streak foi incrementada no momento que completou
-      // revertê-la apenas se oldStreak > 0 (para não ficar negativo)
+      // Em vez disso, mantenha o valor antigo de progresso:
+      habits[idx].progress = oldProgress;
+  
+      // E reverte a streak apenas se houver necessidade;
+      // ou seja, se esse dia de "completo" realmente
+      // havia somado +1 na streak.
       if (oldStreak > 0) {
         habits[idx].streak = oldStreak - 1;
       }
   
-      // Se esse "completar" concedeu XP extra, você poderia
-      // remover essa XP a mais, se quiser ser totalmente rigoroso.
-      // Ex.: currentXp -= 10 (apenas se você tiver rastreado que concedeu +10 de XP ao completar).
-      // Nesse caso, lembre-se de re-renderizar e salvar.
+      // Se quiser ser rigoroso com XP, faça o rollback
+      // do XP extra concedido por ter "concluído" o hábito hoje,
+      // se for o caso. Exemplo:
+      // currentXp -= 10; (apenas se você rastreou que concedeu +10 ao concluir)
+      // updateXpUI();
     }
   
   } else {
-    // Criação normal de um novo hábito (mantém sua lógica atual)
+    // Criação normal de um novo hábito permanece igual
     const newHabit = {
       id: Date.now(),
       name,
@@ -264,8 +265,7 @@ function saveHabit() {
       lastCheckDate: ''
     };
     habits.push(newHabit);
-  }
-  
+  }  
 
   saveData();
   renderHabits();
@@ -541,8 +541,8 @@ function incrementProgress(habitId) {
 
   saveData();
   renderHabits();
+  
 }
-
 
 
 /** Vibração curta */
