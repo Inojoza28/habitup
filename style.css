@@ -15,11 +15,11 @@
   --color-panel: #fff;
   --color-border: #eee;
 
-  --font-primary: 'Poppins', sans-serif;
+  --font-primary: "Poppins", sans-serif;
 
   --radius-base: 8px;
   --radius-sm: 6px;
-  --shadow-base: 0 1px 4px rgba(0,0,0,0.1);
+  --shadow-base: 0 1px 4px rgba(0, 0, 0, 0.1);
   --transition-base: 0.3s ease;
 
   --fs-heading1: 1.7rem;
@@ -38,7 +38,8 @@
   box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   font-family: var(--font-primary);
   background: var(--color-bg);
   color: var(--color-text);
@@ -165,7 +166,7 @@ img {
   border: none;
   border-radius: var(--radius-sm);
   cursor: pointer;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   transition: all 0.3s ease;
 }
 
@@ -173,7 +174,7 @@ img {
   background: var(--color-bg);
   color: var(--color-primary);
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 @media (max-width: 600px) {
@@ -290,7 +291,7 @@ img {
 }
 
 .action-btn:hover {
-  background: rgba(0,0,0,0.07);
+  background: rgba(0, 0, 0, 0.07);
 }
 
 .habit-details {
@@ -321,7 +322,7 @@ img {
 /* ===== Hábito completo com cor diferenciada ===== */
 .habit-item.completed-today {
   background: #eafde5; /* tom de verde claro */
-  border-color: #bee0b9;  
+  border-color: #bee0b9;
 }
 .habit-item.completed-today:hover {
   background: #e2fcd8; /* verde um pouco mais forte no hover */
@@ -373,29 +374,44 @@ img {
 }
 
 @keyframes popIn {
-  from {transform: scale(0);}
-  to   {transform: scale(1);}
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
 }
 
 @keyframes swayMascot {
-  0%   { transform: rotate(0deg); }
-  50%  { transform: rotate(2deg); }
-  100% { transform: rotate(0deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(2deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
 }
 .mascot-container {
   animation: swayMascot 2.5s ease-in-out infinite;
 }
 
 @keyframes pulseMascot {
-  0%   { transform: scale(1); }
-  50%  { transform: scale(1.15); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .mascot-container:active {
   animation: pulseMascot 0.3s ease;
 }
-
 
 .progress-section h3 {
   margin: 0;
@@ -528,20 +544,24 @@ img {
   max-width: 400px;
   border-radius: var(--radius-base);
   z-index: 1001;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   animation: slideDown 0.4s ease;
 }
 
 @keyframes slideDown {
-  from {transform: translate(-50%, -40%);}
-  to   {transform: translate(-50%, -50%);}
+  from {
+    transform: translate(-50%, -40%);
+  }
+  to {
+    transform: translate(-50%, -50%);
+  }
 }
 
 .modal-content input {
   display: block;
   width: 100%;
   padding: 0.6rem 0.8rem;
-  margin-bottom: 0.8rem;  /* espaço inferior para separação */
+  margin-bottom: 0.8rem; /* espaço inferior para separação */
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   font-size: var(--fs-body);
@@ -564,9 +584,9 @@ img {
 .modal-content label {
   font-size: var(--fs-sm);
   color: var(--color-text);
-  display: block; 
+  display: block;
   margin-bottom: 0.3rem;
-  margin-top: 0.8rem; 
+  margin-top: 0.8rem;
   /* cria espaço antes do label, de modo que cada label fique um pouco separado */
 }
 
@@ -590,8 +610,8 @@ img {
   max-width: 450px;
   border-radius: var(--radius-base);
   z-index: 1100;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-  animation: fadeInUp 0.4s ease forwards; 
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  animation: fadeInUp 0.4s ease forwards;
 }
 
 @keyframes fadeInUp {
@@ -613,7 +633,7 @@ img {
 }
 
 .welcome-modal-content h3 {
-  font-size: 1.2rem; 
+  font-size: 1.2rem;
   margin-bottom: 0.5rem;
   color: var(--color-primary);
   text-align: center;
@@ -639,7 +659,7 @@ img {
 }
 
 .welcome-modal-content ul {
-  margin-left: 1.5rem; 
+  margin-left: 1.5rem;
   margin-bottom: 1rem;
   list-style-type: disc;
 }
@@ -651,14 +671,15 @@ img {
 /* Modal de parabéns */
 .congrats-modal {
   position: fixed;
-  top: 50%; left: 50%;
+  top: 50%;
+  left: 50%;
   transform: translate(-50%, -50%);
   background: var(--color-panel);
   width: 90%;
   max-width: 400px;
   border-radius: var(--radius-base);
   z-index: 1100;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
   animation: fadeInUp 0.4s ease forwards;
 }
 
@@ -674,15 +695,16 @@ img {
   display: none;
 }
 
-
 /* ========================
    OVERLAY
 ======================== */
 .overlay {
   position: fixed;
-  top: 0; left: 0;
-  width: 100vw; height: 100vh;
-  background: rgba(0,0,0,0.4);
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
   z-index: 1000;
 }
 
@@ -694,8 +716,14 @@ img {
 }
 
 @keyframes fadeIn {
-  from {opacity: 0; transform: translateY(10px);}
-  to   {opacity: 1; transform: translateY(0);}
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .bounce {
@@ -703,10 +731,18 @@ img {
 }
 
 @keyframes bounceAnim {
-  0%   {transform: scale(1);}
-  30%  {transform: scale(1.3);}
-  50%  {transform: scale(1);}
-  100% {transform: scale(1);}
+  0% {
+    transform: scale(1);
+  }
+  30% {
+    transform: scale(1.3);
+  }
+  50% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 /* Responsividade do welcome-modal */
@@ -769,10 +805,10 @@ img {
 
 /* Efeito Drag and Drop (Arrastar e soltar) */
 .habit-item.dragging {
-  opacity: 0.5;                 /* deixa translúcido */
+  opacity: 0.5; /* deixa translúcido */
   border: 2px dashed var(--color-primary);
-  cursor: grabbing;             /* indica que está em movimento */
-  box-shadow: none;             /* remove sombra, se quiser */
+  cursor: grabbing; /* indica que está em movimento */
+  box-shadow: none; /* remove sombra, se quiser */
 }
 
 .habit-item:not(.dragging) {
@@ -807,7 +843,6 @@ img {
   background-color: var(--color-bg);
   color: var(--color-secondary);
 }
-
 
 /* Modal de Notificação de Nível com Troféu */
 .trophy-notification {
@@ -844,18 +879,44 @@ img {
   }
 }
 
-
 .trophy-notification {
   /* ... suas demais propriedades ... */
   animation: slideUp 2.5s forwards; /* duração 1.5s em vez de 1s */
+}
+
+/* Modo de todos os hábitos completos */
+.all-completed {
+  background: #fbe93136 !important;
+  border-color: #f4e45b !important;
+}
+
+@keyframes fadeInLi {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeOutLi {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
 }
 
 
 /* ========== MEDIA QUERIES ========== */
 /* Se a largura for acima de 720px, exibimos a mensagem e ocultamos a aplicação */
 @media (min-width: 721px) {
-
-  body{
+  body {
     background: #555;
   }
 

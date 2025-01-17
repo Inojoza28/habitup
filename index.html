@@ -1,187 +1,234 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <!-- Meta Descrição -->
-  <meta name="description" content="Gerencie seus hábitos de forma divertida e motivacional. Ganhe XP, evolua de nível e conquiste suas metas diárias. HabitUp é simples, direto e cheio de conquistas!">
-  <!-- Meta Keywords -->
-  <meta name="keywords" content="hábitos, xp, gamificação, rotina, produtividade, metas, evolução, motivação">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <title>HabitUp - Evolua seus Hábitos</title>
-  <link rel="icon" href="imgs/Logo.png">
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <!-- Mensagem para telas > 720px -->
-  <div class="desktop-message">
-    <div class="desktop-message-content">
-      <h1>Habit<span>Up</span></h1>
-      <p>
-        Este aplicativo foi projetado para dispositivos móveis 
-        (até 720px). Por favor, acesse pelo seu celular ou 
-        redimensione a janela para uma largura menor.
-      </p>
-    </div>
-  </div>
-  <div class="app-wrapper">
-  <!-- CABEÇALHO -->
-  <header class="header">
-    <h1>Habit<span>Up</span></h1>
-  </header>
-
-  <!-- SEÇÃO INTRODUTÓRIA (simplificada) -->
-  <section class="intro-section">
-    <div class="intro-content">
-      <!-- Título principal -->
-      <h2>Transforme Seus Hábitos Agora</h2>
-  
-      <!-- Texto curto, porém motivador e descritivo -->
-      <p>
-        Seja bem-vindo(a) ao <strong>HabitUp</strong>, seu sistema de 
-        <em>evolução pessoal</em> baseado em metas diárias e conquistas. 
-        Trace seus objetivos, ganhe <em>XP</em> a cada progresso e suba 
-        de nível rumo à produtividade máxima!
-      </p>
-  
-      <!-- Botão de chamada para ação (Novo ID) -->
-      <button class="btn btn-primary cta-button" id="startNowBtn">
-        Começar Agora
-      </button>
-    </div>
-  </section>
-  
-  <!-- CONTAINER PRINCIPAL -->
-  <main class="app">
-
-    <!-- SEÇÃO DE HÁBITOS -->
-    <section class="habits-section">
-      <div class="habits-header">
-        <h2>Meus Hábitos</h2>
-        <button id="addHabitBtn" class="btn btn-primary">+ Criar Hábito</button>
-      </div>
-      <ul id="habitsList" class="habits-list">
-        <!-- Lista de hábitos aparece aqui -->
-      </ul>
-    </section>
-
-    <!-- SEÇÃO DE PROGRESSO (XP / NÍVEL / MASCOTE) -->
-    <section class="progress-section">
-      <div class="progress-container">
-        <h2 class="xp-title">Seu Progresso</h2>
-        <!-- Novo: Exibe nome do usuário acima do nível -->
-        <h4 id="userNameDisplay" class="user-name hidden"></h4>
-
-        <div class="mascot-container">
-          <img id="mascotImg" 
-               src="https://cdn-icons-png.flaticon.com/512/747/747376.png" 
-               alt="Mascote do HabitUp" />
-        </div>
-        <h3>Nível <span id="levelValue">1</span></h3>
-        <div class="xp-bar">
-          <div id="xpProgress" class="xp-progress"></div>
-        </div>
-        <p class="xp-values">
-          <span id="currentXp">0</span> / <span id="xpToNextLevel">50</span> XP
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Meta Descrição -->
+    <meta
+      name="description"
+      content="Gerencie seus hábitos de forma divertida e motivacional. Ganhe XP, evolua de nível e conquiste suas metas diárias. HabitUp é simples, direto e cheio de conquistas!"
+    />
+    <!-- Meta Keywords -->
+    <meta
+      name="keywords"
+      content="hábitos, xp, gamificação, rotina, produtividade, metas, evolução, motivação"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <title>HabitUp - Evolua seus Hábitos</title>
+    <link rel="icon" href="imgs/Logo.png" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- Mensagem para telas > 720px -->
+    <div class="desktop-message">
+      <div class="desktop-message-content">
+        <h1>Habit<span>Up</span></h1>
+        <p>
+          Este aplicativo foi projetado para dispositivos móveis (até 720px).
+          Por favor, acesse pelo seu celular ou redimensione a janela para uma
+          largura menor.
         </p>
       </div>
+    </div>
+    <div class="app-wrapper">
+      <!-- CABEÇALHO -->
+      <header class="header">
+        <h1>Habit<span>Up</span></h1>
+      </header>
+
+      <!-- SEÇÃO INTRODUTÓRIA (simplificada) -->
+      <section class="intro-section">
+        <div class="intro-content">
+          <!-- Título principal -->
+          <h2>Transforme Seus Hábitos Agora</h2>
+
+          <!-- Texto curto, porém motivador e descritivo -->
+          <p>
+            Seja bem-vindo(a) ao <strong>HabitUp</strong>, seu sistema de
+            <em>evolução pessoal</em> baseado em metas diárias e conquistas.
+            Trace seus objetivos, ganhe <em>XP</em> a cada progresso e suba de
+            nível rumo à produtividade máxima!
+          </p>
+
+          <!-- Botão de chamada para ação (Novo ID) -->
+          <button class="btn btn-primary cta-button" id="startNowBtn">
+            Começar Agora
+          </button>
+        </div>
+      </section>
+
+      <!-- CONTAINER PRINCIPAL -->
+      <main class="app">
+        <!-- SEÇÃO DE HÁBITOS -->
+        <section class="habits-section">
+          <div class="habits-header">
+            <h2>Meus Hábitos</h2>
+            <button id="addHabitBtn" class="btn btn-primary">
+              + Criar Hábito
+            </button>
+          </div>
+          <ul id="habitsList" class="habits-list">
+            <!-- Lista de hábitos aparece aqui -->
+          </ul>
+        </section>
+
+        <!-- SEÇÃO DE PROGRESSO (XP / NÍVEL / MASCOTE) -->
+        <section class="progress-section">
+          <div class="progress-container">
+            <h2 class="xp-title">Seu Progresso</h2>
+            <!-- Novo: Exibe nome do usuário acima do nível -->
+            <h4 id="userNameDisplay" class="user-name hidden"></h4>
+
+            <div class="mascot-container">
+              <img
+                id="mascotImg"
+                src="https://cdn-icons-png.flaticon.com/512/747/747376.png"
+                alt="Mascote do HabitUp"
+              />
+            </div>
+            <h3>Nível <span id="levelValue">1</span></h3>
+            <div class="xp-bar">
+              <div id="xpProgress" class="xp-progress"></div>
+            </div>
+            <p class="xp-values">
+              <span id="currentXp">0</span> /
+              <span id="xpToNextLevel">50</span> XP
+            </p>
+          </div>
           <!-- Botão de reset -->
           <button id="resetButton" onclick="resetAllData()">
-            <i class="fas fa-lock"></i>&nbsp;  Resetar Todo o Progresso
-          </button>          
-    </section>
-  </main>
+            <i class="fas fa-lock"></i>&nbsp; Resetar Todo o Progresso
+          </button>
+        </section>
+      </main>
 
-  <!-- SEÇÃO DE LINKS (RODAPÉ) -->
-  <footer class="links-section">
-    <h2>Acesse também:</h2>
-    <p>Confira outras ideias:</p>
-    <ul class="links-list">
-      <li><a href="https://inojoza28.github.io/vivabem" target="_blank">
-        Calcule o seu IMC
-      </a></li>
-      <li><a href="https://aibfinance.com.br" target="_blank">
-        Gerencie o seu dinheiro
-      </a></li>
-      <li><a href="https://inojoza28.github.io/motivacao" target="_blank">
-        Veja frases motivacionais todos os dias
-      </a></li>
-    </ul>
-  </footer>
-  
+      <!-- SEÇÃO DE LINKS (RODAPÉ) -->
+      <footer class="links-section">
+        <h2>Acesse também:</h2>
+        <p>Confira outras ideias:</p>
+        <ul class="links-list">
+          <li>
+            <a href="https://inojoza28.github.io/vivabem" target="_blank">
+              Calcule o seu IMC
+            </a>
+          </li>
+          <li>
+            <a href="https://aibfinance.com.br" target="_blank">
+              Gerencie o seu dinheiro
+            </a>
+          </li>
+          <li>
+            <a href="https://inojoza28.github.io/motivacao" target="_blank">
+              Veja frases motivacionais todos os dias
+            </a>
+          </li>
+        </ul>
+      </footer>
 
-  <!-- Novo Rodapé Simples -->
-<footer class="simple-footer">
-  <p><a href="#" style="text-decoration: none; color: #ffffff;">HabitUp</a></p>
-</footer>
+      <!-- Novo Rodapé Simples -->
+      <footer class="simple-footer">
+        <p>
+          <a href="#" style="text-decoration: none; color: #ffffff">HabitUp</a>
+        </p>
+      </footer>
 
-  <!-- MODAL DE CRIAÇÃO/EDIÇÃO DE HÁBITO (NÃO ALTERADO) -->
-  <div id="habitModal" class="modal hidden">
-    <div class="modal-content">
-      <h3 id="modalTitle">Novo Hábito</h3>
+      <!-- MODAL DE CRIAÇÃO/EDIÇÃO DE HÁBITO (NÃO ALTERADO) -->
+      <div id="habitModal" class="modal hidden">
+        <div class="modal-content">
+          <h3 id="modalTitle">Novo Hábito</h3>
 
-      <label for="habitName">Nome do Hábito</label>
-      <input type="text" id="habitName" placeholder="Ex: Beber 2L de água" />
+          <label for="habitName">Nome do Hábito</label>
+          <input
+            type="text"
+            id="habitName"
+            placeholder="Ex: Beber 2L de água"
+          />
 
-      <label for="habitIcon">Ícone/Emoji (opcional)</label>
-      <input type="text" id="habitIcon" placeholder="Ex: 💧" />
+          <label for="habitIcon">Ícone/Emoji (opcional)</label>
+          <input type="text" id="habitIcon" placeholder="Ex: 💧" />
 
-      <label for="habitGoal">Meta Diária (quantidade)</label>
-      <input type="number" min="1" id="habitGoal" placeholder="Ex: 8" />
+          <label for="habitGoal">Meta Diária (quantidade)</label>
+          <input type="number" min="1" id="habitGoal" placeholder="Ex: 8" />
 
-      <div class="modal-buttons">
-        <button id="saveHabitBtn" class="btn btn-primary">Salvar</button>
-        <button id="cancelModalBtn" class="btn btn-secondary">Cancelar</button>
+          <div class="modal-buttons">
+            <button id="saveHabitBtn" class="btn btn-primary">Salvar</button>
+            <button id="cancelModalBtn" class="btn btn-secondary">
+              Cancelar
+            </button>
+          </div>
+        </div>
       </div>
+
+      <!-- NOVO MODAL DE BOAS-VINDAS, SEM INTERFERIR NO DE HÁBITOS -->
+      <div id="welcomeModal" class="welcome-modal hidden">
+        <div class="welcome-modal-content">
+          <h3>Boas-Vindas ao HabitUp!</h3>
+          <p>
+            Para começar, digite seu nome abaixo. Depois, veja algumas dicas de
+            hábitos saudáveis para ter uma vida melhor.
+          </p>
+
+          <!-- Novo campo para nome do usuário -->
+          <label for="userNameField">Seu Nome:</label>
+          <input type="text" id="userNameField" placeholder="Ex: Gabriel" />
+
+          <ul>
+            <li>
+              <strong>Hidratação:</strong> Beba ao menos 2L de água por dia.
+            </li>
+            <li>
+              <strong>Exercícios:</strong> Movimente-se 30 minutos diariamente.
+            </li>
+            <li>
+              <strong>Alimentação:</strong> Consuma frutas, legumes e proteínas
+              magras.
+            </li>
+            <li>
+              <strong>Sono:</strong> Tente dormir de 7 a 8 horas por noite.
+            </li>
+            <li>
+              <strong>Pausa Digital:</strong> Reserve momentos sem telas ou
+              redes sociais.
+            </li>
+          </ul>
+
+          <button class="btn btn-secondary" id="confirmWelcomeBtn">
+            Confirmar
+          </button>
+        </div>
+      </div>
+
+      <!-- NOVO MODAL DE BOAS-VINDAS, SEM INTERFERIR NO DE HÁBITOS -->
+      <div id="congratsModal" class="congrats-modal hidden">
+        <div class="congrats-content">
+          <h3>🏆 Parabéns! 🏅</h3>
+          <p id="congratsMessage"></p>
+          <button id="closeCongratsBtn" class="btn btn-secondary">
+            Fechar
+          </button>
+        </div>
+      </div>
+
+      <!-- Notificação visual de nível (troféu + "+1") -->
+      <div id="trophyNotification" class="trophy-notification hidden">
+        <span class="trophy-emoji">🏆</span>
+        <span class="trophy-plus">+1</span>
+      </div>
+
+      <audio
+        id="levelSound"
+        src="audios/happy-pop-2-185287.mp3"
+        preload="auto"
+      ></audio>
+
+      <!-- OVERLAY PARA MODAIS -->
+      <div id="overlay" class="overlay hidden"></div>
     </div>
-  </div>
-
-  <!-- NOVO MODAL DE BOAS-VINDAS, SEM INTERFERIR NO DE HÁBITOS -->
-  <div id="welcomeModal" class="welcome-modal hidden">
-    <div class="welcome-modal-content">
-      <h3>Boas-Vindas ao HabitUp!</h3>
-      <p>
-        Para começar, digite seu nome abaixo. Depois, veja algumas 
-        dicas de hábitos saudáveis para ter uma vida melhor.
-      </p>
-
-      <!-- Novo campo para nome do usuário -->
-      <label for="userNameField">Seu Nome:</label>
-      <input type="text" id="userNameField" placeholder="Ex: Gabriel" />
-
-      <ul>
-        <li><strong>Hidratação:</strong> Beba ao menos 2L de água por dia.</li>
-        <li><strong>Exercícios:</strong> Movimente-se 30 minutos diariamente.</li>
-        <li><strong>Alimentação:</strong> Consuma frutas, legumes e proteínas magras.</li>
-        <li><strong>Sono:</strong> Tente dormir de 7 a 8 horas por noite.</li>
-        <li><strong>Pausa Digital:</strong> Reserve momentos sem telas ou redes sociais.</li>
-      </ul>
-
-      <button class="btn btn-secondary" id="confirmWelcomeBtn">Confirmar</button>
-    </div>
-  </div>
-
-<!-- NOVO MODAL DE BOAS-VINDAS, SEM INTERFERIR NO DE HÁBITOS -->
-  <div id="congratsModal" class="congrats-modal hidden">
-    <div class="congrats-content">
-      <h3>🏆 Parabéns! 🏅</h3>
-      <p id="congratsMessage"></p>
-      <button id="closeCongratsBtn" class="btn btn-secondary">Fechar</button>
-    </div>
-  </div>
-
-  <!-- Notificação visual de nível (troféu + "+1") -->
-<div id="trophyNotification" class="trophy-notification hidden">
-  <span class="trophy-emoji">🏆</span>
-  <span class="trophy-plus">+1</span>
-</div>
-
-<audio id="levelSound" src="audios/happy-pop-2-185287.mp3" preload="auto"></audio>
-
-  <!-- OVERLAY PARA MODAIS -->
-  <div id="overlay" class="overlay hidden"></div>
-</div>
-  <script src="script.js"></script>
-
-</body>
+    <script src="script.js"></script>
+  </body>
 </html>
