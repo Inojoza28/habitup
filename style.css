@@ -444,6 +444,8 @@ img {
 /* ========================
    LINKS SECTION (Rodapé)
 ======================== */
+/* ===== Seção de Projetos no Rodapé ===== */
+
 .links-section {
   margin: 1.2rem;
   text-align: center;
@@ -453,32 +455,138 @@ img {
   color: var(--color-primary);
   margin-bottom: 0.5rem;
   font-size: var(--fs-heading2);
+  font-weight: 600;
 }
 
-.links-list {
-  list-style: inside;
-  margin: 0.5rem auto;
-  display: inline-block;
-  text-align: left;
+.links-section p {
   font-size: var(--fs-body);
-  line-height: 1.6;
-  padding-left: 1rem;
+  color: var(--color-text);
+  margin-bottom: 1rem;
 }
 
-.links-list li {
-  margin-bottom: 0.3rem;
+/* Contêiner que agrupa os 'cards' de projetos */
+.projects-wrapper {
+  display: flex;           /* ou grid, se preferir */
+  flex-wrap: wrap;         
+  gap: 1rem;              
+  justify-content: center; /* centraliza na horizontal */
+  max-width: 1000px;
+  margin: 0 auto;          /* se quiser limitar a largura */
 }
 
-.links-list li a {
-  color: var(--color-primary);
-  text-decoration: none;
-  transition: color var(--transition-base);
+/* ============================
+   CARD DE PROJETO
+============================ */
+.card {
+  width: 100%;
+  max-width: 390px;
+  height: 70px;
+  background: #f7f7f7; /* Usa sua cor primária ou fallback */
+  border-radius: var(--radius-base);
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  /* se quiser fundo translúcido + blur:
+     backdrop-filter: blur(10px); */
+  box-shadow: var(--shadow-base);
+  transition: transform 0.4s var(--transition-base), 
+              background 0.4s var(--transition-base);
+  cursor: pointer; 
+  /* Deixa espaço interno para não ficar 'apertado': */
+  padding-right: 10px; 
 }
 
-.links-list li a:hover {
-  text-decoration: underline;
-  color: var(--color-secondary);
+.card:hover {
+  transform: scale(1.03);
+  background: #e0e0e0; /* um tom mais escuro no hover, para destaque */
 }
+
+/* Bloco da imagem/ícone */
+.img {
+  width: 50px;
+  height: 50px;
+  margin-left: 10px;
+  border-radius: var(--radius-sm, 6px);
+  overflow: hidden;   /* impede que a img transborde */
+  background: none;   /* remove gradiente, se quiser */
+  display: flex;      /* para centralizar a imagem */
+  align-items: center; 
+  justify-content: center;
+}
+
+.img img.logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ajusta a imagem sem distorcer */
+  border-radius: var(--radius-sm, 6px);
+}
+
+
+.card:hover .logo-img {
+  filter: brightness(0.8);
+  transition: 0.3s ease-in-out;
+}
+
+
+/* Caixa de texto */
+.card .textBox {
+  width: calc(100% - 80px);
+  margin-left: 10px;
+  color: var(--color-white);
+  font-family: var(--font-primary, 'Poppins', sans-serif);
+}
+
+.card .textContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Subtítulo/etiqueta lateral, ex.: tempo ou categoria */
+.card .span {
+  font-size: 0.65rem;       /* Ajuste conforme necessidade */
+  color: #ffbb00 /* um branco translúcido */
+}
+
+/* Título principal do card */
+.card .h1 {
+  font-size: 0.9rem; /* Ajuste se quiser maior */
+  font-weight: 600;
+  margin: 0;
+  color: #2e5080;
+}
+
+/* Texto menor abaixo do título */
+.card .p {
+  font-size: 0.8rem;
+  font-weight: 400;
+  margin: 2px 0 0;
+  color: rgb(128 128 128 / 90%);
+}
+
+/* Efeitos de fadeIn/fadeOut se quiser animação na aparição */
+@keyframes fadeInLi {
+  0% { 
+    opacity: 0; 
+    transform: scale(0.95);
+  }
+  100% { 
+    opacity: 1; 
+    transform: scale(1); 
+  }
+}
+
+@keyframes fadeOutLi {
+  0% { 
+    opacity: 1; 
+    transform: scale(1);
+  }
+  100% { 
+    opacity: 0; 
+    transform: scale(0.95);
+  }
+}
+
 
 /* ========================
    SIMPLE FOOTER (Rodapé Simples)

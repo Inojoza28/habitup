@@ -111,24 +111,56 @@
       <footer class="links-section">
         <h2>Acesse também:</h2>
         <p>Confira outras ideias:</p>
-        <ul class="links-list">
-          <li>
-            <a href="https://inojoza28.github.io/vivabem" target="_blank">
-              Calcule o seu IMC
-            </a>
-          </li>
-          <li>
-            <a href="https://aibfinance.com.br" target="_blank">
-              Gerencie o seu dinheiro
-            </a>
-          </li>
-          <li>
-            <a href="https://inojoza28.github.io/motivacao" target="_blank">
-              Veja frases motivacionais todos os dias
-            </a>
-          </li>
-        </ul>
+        
+        <!-- Em vez de <ul> e <li>, vamos usar um contêiner flex ou grid 
+             que conterá vários "cards". -->
+        <div class="projects-wrapper">
+      
+          <!-- Card 1 -->
+          <div class="card" onclick="window.open('https://inojoza28.github.io/vivabem', '_blank')">
+            <div class="img">
+              <img src="imgs/logo-habitup.png" alt="Logo" class="logo-img" />
+            </div>
+            <div class="textBox">
+              <div class="textContent">
+                <p class="h1">Calcule o seu IMC</p>
+                <span class="span">Health</span>
+              </div>
+              <p class="p">Ferramenta para calcular o IMC.</p>
+            </div>
+          </div>
+      
+          <!-- Card 2 -->
+          <div class="card" onclick="window.open('https://aibfinance.com.br', '_blank')">
+            <div class="img">
+              <img src="imgs/logo-habitup.png" alt="Logo" class="logo-img" />
+            </div>
+            <div class="textBox">
+              <div class="textContent">
+                <p class="h1">Gerencie o seu dinheiro</p>
+                <span class="span">Finanças</span>
+              </div>
+              <p class="p">Controle financeiro simples e prático.</p>
+            </div>
+          </div>
+      
+          <!-- Card 3 -->
+          <div class="card" onclick="window.open('https://inojoza28.github.io/motivacao', '_blank')">
+            <div class="img">
+              <img src="imgs/logo-habitup.png" alt="Logo" class="logo-img" />
+            </div>
+            <div class="textBox">
+              <div class="textContent">
+                <p class="h1">Frases Motivacionais</p>
+                <span class="span">Inspiração</span>
+              </div>
+              <p class="p">Obtenha frases motivacionais diárias!</p>
+            </div>
+          </div>
+      
+        </div>
       </footer>
+      
 
       <!-- Novo Rodapé Simples -->
       <footer class="simple-footer">
