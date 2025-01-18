@@ -228,7 +228,7 @@ body.dark-mode .desktop-message-content p {
 }
 
 body.dark-mode #mascotImg{
-  width: 100px; /* Ajuste conforme necessário */
+  width: 100%; /* Ajuste conforme necessário */
   height: auto;
   filter: drop-shadow(0 0 2px white) drop-shadow(0 0 2px white);
 }
