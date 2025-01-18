@@ -235,8 +235,8 @@ body.dark-mode .desktop-message-content p {
   right: 0; /* Grudado à direita */
   width: 50px;
   height: 50px;
-  background: var(--color-primary, #4a6fa1); /* Cor principal */
-  color: var(--color-white, #fff); /* Cor do ícone */
+  background: #fbc531; /* Cor principal */
+  color: var(--color-primary, #4a6fa1); /* Cor do ícone */
   border: none;
   border-radius: 0 0 10px 10px; /* Bordas arredondadas somente embaixo */
   display: flex;
