@@ -362,14 +362,29 @@ function renderHabits() {
     const actionsDiv = document.createElement("div");
     actionsDiv.className = "habit-actions";
 
+    // const doneBtn = document.createElement("button");
+    // doneBtn.className = "action-btn";
+    // doneBtn.innerText = "✔️";
+    // doneBtn.title = "Marcar Feito";
+    // doneBtn.addEventListener("click", (e) => {
+    //   e.stopPropagation();
+    //   incrementProgress(habit.id);
+    // });
+
     const doneBtn = document.createElement("button");
     doneBtn.className = "action-btn";
-    doneBtn.innerText = "✔️";
     doneBtn.title = "Marcar Feito";
+    
+    // Adiciona o ícone do Font Awesome ao botão
+    const icon = document.createElement("i");
+    icon.className = "fa-solid fa-check styled-icon";
+    doneBtn.appendChild(icon);
+    
     doneBtn.addEventListener("click", (e) => {
       e.stopPropagation();
       incrementProgress(habit.id);
     });
+    
 
     const editBtn = document.createElement("button");
     editBtn.className = "action-btn";

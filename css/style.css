@@ -338,6 +338,16 @@ img {
   background: rgba(0, 0, 0, 0.07);
 }
 
+.styled-icon {
+  font-size: 21px; /* Aumenta o tamanho do ícone */
+  color: #0d0e0d; /* Cor do ícone */
+  text-shadow: 1px 0px 0 #01600f, -0px -0px 0 #01600f;
+  transform: scale(1.1); /* Escala o ícone para parecer mais grosso */
+  border-radius: 50%; /* Deixa o ícone circular */
+  display: inline-block; /* Necessário para aplicar o fundo e padding */
+  transition: all 0.3s ease; /* Transição para interatividade */
+}
+
 .habit-details {
   display: none;
   flex-direction: column;

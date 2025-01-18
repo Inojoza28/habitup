@@ -247,6 +247,16 @@ body.dark-mode .mascot-container img {
   transform: scale(0.95); /* Encolhe levemente para caber no container */
 }
 
+body.dark-mode .styled-icon {
+  font-size: 21px; /* Aumenta o tamanho do ícone */
+  color: #2ecc71; /* Cor do ícone */
+  text-shadow: 1px 0px 0 #2ecc71, -0px -0px 0 #2ecc71;
+  transform: scale(1.1); /* Escala o ícone para parecer mais grosso */
+  border-radius: 50%; /* Deixa o ícone circular */
+  display: inline-block; /* Necessário para aplicar o fundo e padding */
+  transition: all 0.3s ease; /* Transição para interatividade */
+}
+
 /* ========== ESTILIZAÇÃO DO BOTÃO (lua/sol) ========== */
 /* Botão para alternar tema fixado */
 .theme-toggle-btn {
