@@ -6,8 +6,7 @@
  *   drag-and-drop com placeholder,
  *   vibração curta no "Feito",
  *   modal de boas-vindas,
- *   modal de parabéns a cada nível múltiplo de 5,
- *   E agora: apenas o modal de parabéns NÃO fecha ao clicar no overlay)
+ *   modal de parabéns a cada nível múltiplo de 5 )
  ******************************************************/
 
 // Seletores gerais
@@ -252,10 +251,10 @@ function saveHabit() {
     habits[idx].goal = goal;
 
     if (completedHoje && goal > oldGoal) {
-      // Remova (ou comente) a linha que subtraía 1 do oldProgress:
+      // Comentei a linha que subtraía 1 do oldProgress:
       // habits[idx].progress = Math.max(oldGoal - 1, 0);
 
-      // Em vez disso, mantenha o valor antigo de progresso:
+      // Em vez disso, mantive o valor antigo de progresso:
       habits[idx].progress = oldProgress;
 
       // E reverte a streak apenas se houver necessidade;
