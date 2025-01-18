@@ -514,10 +514,10 @@ function resetDailyProgressIfNeeded() {
 
   habits.forEach((habit) => {
     if (habit.lastCheckDate !== todayStr) {
-      // Se a data do último check não for "ontem" 
+      // Se a data do último check não for "ontem"
       // (ou seja, já se passou mais de 1 dia sem concluir)
       if (!isLocalYesterday(habit.lastCheckDate, todayStr)) {
-        habit.streak = 0; 
+        habit.streak = 0;
       }
       habit.progress = 0;
       updated = true;
@@ -537,7 +537,6 @@ function resetDailyProgressIfNeeded() {
     renderHabits();
   }
 }
-
 
 /**
  * incrementProgress:

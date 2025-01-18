@@ -195,9 +195,9 @@ body.dark-mode .card .p {
   color: rgb(156 156 156 / 90%);
 }
 
-body.dark-mode #saveHabitBtn{
-    background: #518bda;
-    color: #fdfdfd;
+body.dark-mode #saveHabitBtn {
+  background: #518bda;
+  color: #fdfdfd;
 }
 
 body.dark-mode .hr-central {
@@ -219,8 +219,8 @@ body.dark-mode .links-section {
   );
 }
 
-body.dark-mode .desktop-message-content p{
-    color: #101010;
+body.dark-mode .desktop-message-content p {
+  color: #101010;
 }
 
 /* ========== ESTILIZAÇÃO DO BOTÃO (lua/sol) ========== */
