@@ -21,7 +21,8 @@
     />
     <title>HabitUp - Evolua seus Hábitos</title>
     <link rel="icon" href="imgs/Logo.png" />
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="css/dark.css" />
+    <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
     <!-- Mensagem para telas > 720px -->
@@ -40,6 +41,24 @@
       <header class="header">
         <h1>Habit<span>Up</span></h1>
       </header>
+
+      <!-- Botão no canto superior direito -->
+      <button
+        id="themeToggleBtn"
+        class="theme-toggle-btn"
+        aria-label="Alternar tema (Dark/Light)"
+      >
+        <i id="themeToggleIcon" class="fa-solid fa-moon"></i>
+      </button>
+
+      <!-- Botão de Scroll Top com Ícone -->
+      <button
+        id="scrollTopBtn"
+        class="scroll-top-btn"
+        aria-label="Voltar ao topo"
+      >
+        <i class="fas fa-chevron-up"></i>
+      </button>
 
       <!-- SEÇÃO INTRODUTÓRIA (simplificada) -->
       <section class="intro-section">
@@ -101,37 +120,139 @@
             </p>
           </div>
           <!-- Botão de reset -->
-          <button id="resetButton" onclick="resetAllData()">
+          <button class="reset" id="resetButton" onclick="resetAllData()">
             <i class="fas fa-lock"></i>&nbsp; Resetar Todo o Progresso
           </button>
         </section>
       </main>
 
+      <hr />
+      <!-- SEÇÃO DE PONTOS E NÍVEIS (ANTES DA healthy-habits-section) -->
+      <section class="rewards-system-section">
+        <h2>Como Funciona o Sistema de Pontos e Níveis?</h2>
+
+        <p>
+          No <strong>HabitUp</strong>, cada hábito concluído rende
+          <strong>10 XP</strong>. Se você concluir todos os hábitos do dia,
+          ganha um bônus adicional de <strong>50 XP</strong>. Isso garante que
+          seu esforço diário seja recompensado e incentivado!
+        </p>
+
+        <div class="rewards-highlight">
+          <h3>Recompensas Diárias</h3>
+          <ul class="rewards-list">
+            <li>
+              <span class="badge">+10 XP</span> para cada hábito completado
+            </li>
+            <li>
+              <span class="badge plus">+50 XP</span> ao finalizar todos os
+              hábitos do dia
+            </li>
+            <li>Suba de nível sempre que atingir a pontuação necessária</li>
+          </ul>
+        </div>
+
+        <p>
+          Dessa forma, a <em>gamificação</em> mantém sua
+          <strong>motivação lá em cima</strong>, reforçando hábitos saudáveis e
+          bons resultados ao longo do tempo.
+        </p>
+      </section>
+
+      <hr class="hr-central" />
+
+      <!-- SEÇÃO DE BENEFÍCIOS E SUGESTÕES DE HÁBITOS SAUDÁVEIS -->
+      <section class="healthy-habits-section">
+        <h2>Por que Hábitos Saudáveis Importam?</h2>
+
+        <p>
+          Manter hábitos saudáveis pode aumentar sua produtividade e bem-estar.
+          Estudos mostram, por exemplo, que
+          <strong>fazer pausas regulares</strong> e
+          <strong>exercitar-se</strong> reduz o estresse e melhora o foco em até
+          <em>20%</em> <sup>(1)</sup>. Além disso, segundo a Organização Mundial
+          da Saúde, pequenos ajustes na rotina — como dormir melhor e beber mais
+          água — podem elevar significativamente sua qualidade de vida.
+        </p>
+
+        <!-- Pequeno destaque de dados reais -->
+        <div class="data-highlight">
+          <p>
+            <strong>Fato:</strong> Uma pesquisa do
+            <em>American Journal of Health</em> apontou que pessoas que caminham
+            ao menos 30 minutos ao dia têm
+            <strong>15% menos chance de desenvolver doenças crônicas</strong>.
+          </p>
+        </div>
+
+        <h3>Sugestões de Hábitos Saudáveis</h3>
+        <ul class="healthy-suggestions-list">
+          <li>
+            <strong>Movimente-se:</strong> pratique caminhada, dança ou
+            exercícios simples para estimular a circulação.
+          </li>
+          <li>
+            <strong>Pausas Ativas:</strong> a cada 50-60 minutos de trabalho,
+            faça uma pausa de 5 minutos para alongar ou beber água.
+          </li>
+          <li>
+            <strong>Rotina de Sono:</strong> procure dormir de 7 a 8 horas, com
+            horários bem definidos para ir à cama e despertar.
+          </li>
+          <li>
+            <strong>Alimentação Balanceada:</strong> inclua frutas, vegetais e
+            grãos integrais na sua dieta, evitando alimentos ultraprocessados.
+          </li>
+          <li>
+            <strong>Hidratação Constante:</strong> beba pelo menos 2 litros de
+            água por dia, mantendo a saúde do corpo e da mente.
+          </li>
+        </ul>
+
+        <p class="refs">
+          <em
+            >(1) Fonte de referência:
+            <a href="https://www.who.int/" target="_blank">OMS</a> e estudos
+            publicados no
+            <a href="https://www.sciencedirect.com/" target="_blank"
+              >American Journal of Health</a
+            ></em
+          >
+        </p>
+      </section>
+
+      <hr />
+
       <!-- SEÇÃO DE LINKS (RODAPÉ) -->
       <footer class="links-section">
         <h2>Acesse também:</h2>
         <p>Confira outras ideias:</p>
-        
+
         <!-- Em vez de <ul> e <li>, vamos usar um contêiner flex ou grid 
              que conterá vários "cards". -->
         <div class="projects-wrapper">
-      
           <!-- Card 1 -->
-          <div class="card" onclick="window.open('https://inojoza28.github.io/vivabem', '_blank')">
+          <div
+            class="card"
+            onclick="window.open('https://inojoza28.github.io/vivabem', '_blank')"
+          >
             <div class="img">
               <img src="imgs/logo-habitup.png" alt="Logo" class="logo-img" />
             </div>
             <div class="textBox">
               <div class="textContent">
                 <p class="h1">Calcule o seu IMC</p>
-                <span class="span">Health</span>
+                <span class="span">Saúde</span>
               </div>
               <p class="p">Ferramenta para calcular o IMC.</p>
             </div>
           </div>
-      
+
           <!-- Card 2 -->
-          <div class="card" onclick="window.open('https://aibfinance.com.br', '_blank')">
+          <div
+            class="card"
+            onclick="window.open('https://aibfinance.com.br', '_blank')"
+          >
             <div class="img">
               <img src="imgs/logo-habitup.png" alt="Logo" class="logo-img" />
             </div>
@@ -143,9 +264,12 @@
               <p class="p">Controle financeiro simples e prático.</p>
             </div>
           </div>
-      
+
           <!-- Card 3 -->
-          <div class="card" onclick="window.open('https://inojoza28.github.io/motivacao', '_blank')">
+          <div
+            class="card"
+            onclick="window.open('https://inojoza28.github.io/motivacao', '_blank')"
+          >
             <div class="img">
               <img src="imgs/logo-habitup.png" alt="Logo" class="logo-img" />
             </div>
@@ -157,10 +281,8 @@
               <p class="p">Obtenha frases motivacionais diárias!</p>
             </div>
           </div>
-      
         </div>
       </footer>
-      
 
       <!-- Novo Rodapé Simples -->
       <footer class="simple-footer">
@@ -261,6 +383,8 @@
       <!-- OVERLAY PARA MODAIS -->
       <div id="overlay" class="overlay hidden"></div>
     </div>
-    <script src="script.js"></script>
+    <script src="js/dark-mode.js"></script>
+    <script src="js/scroll-top.js"></script>
+    <script src="js/script.js"></script>
   </body>
 </html>

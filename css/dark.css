@@ -1,0 +1,263 @@
+/* ========= dark.css =========
+   Define estilos para o modo dark
+   usando a classe .dark-mode no <body>.
+================================= */
+
+/* 
+   Substituímos as variáveis de cor
+   e algumas outras propriedades para
+   adequá-las ao tema escuro.
+*/
+body.dark-mode {
+  --color-bg: #1f1f1f;
+  --color-panel: #2a2a2a;
+  --color-border: #444;
+  --color-text: #ddd;
+  --color-white: #333;
+  --shadow-base: 0 1px 4px rgba(255, 255, 255, 0.1);
+  /* Ajuste as cores conforme desejar;
+       mantenha coerência com a identidade. */
+}
+
+/* Ajustes pontuais que não dependem apenas de variáveis */
+body.dark-mode {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+/* Sobrescreve cores de seções genéricas (caso precise) */
+
+body.dark-mode .intro-section {
+  background: linear-gradient(
+    145deg,
+    /* Ângulo da diagonal */ var(--color-primary, #4a6fa1) 0%,
+    /* Ponta azul no início */ #000000 50%,
+    /* Centro escuro */ var(--color-secondary, #fbc531) 160%
+      /* Ponta amarela no final */
+  );
+}
+
+body.dark-mode .habits-section {
+  background: var(--color-panel);
+  border-bottom: 2px solid #fbc531;
+}
+
+body.dark-mode .progress-section {
+  background: var(--color-panel);
+  border-bottom: 2px solid #82ade7c9;
+}
+
+body.dark-mode .modal-content h3 {
+  color: #82ade7;
+}
+
+/* Exemplo: Card de hábitos, para ficar mais escuro */
+body.dark-mode .habit-item {
+  background: #2f2f2f;
+  border-color: #777777;
+}
+
+body.dark-mode .habit-name {
+  color: #e9e9e9;
+}
+
+/* Se precisar alterar o hover */
+body.dark-mode .habit-item:hover {
+  background: #3a3a3a;
+}
+
+body.dark-mode .habit-item.completed-today {
+  background: #4e5f4a;
+  border-color: #9ff193;
+}
+
+body.dark-mode .habit-details {
+  color: #cccccc;
+}
+
+body.dark-mode .habit-progress-fill {
+  background: #fbc531;
+}
+
+/* Botões em dark mode, ajustando cor e hover */
+body.dark-mode .btn-primary {
+  background: var(--color-secondary);
+  color: #222222f0;
+}
+
+body.dark-mode .btn-primary:hover {
+  background: #e5c529;
+}
+
+body.dark-mode .btn-secondary {
+  background: #fbc531eb;
+  color: #ffffff;
+}
+
+body.dark-mode .welcome-modal-content h3 {
+  color: #82ade7;
+}
+
+/* Ajustando cor do header no dark */
+body.dark-mode .header {
+  background: #2f2f2f;
+  color: #ddd;
+}
+
+/* Ajuste do mascote e xp bar, se precisar */
+body.dark-mode .xp-bar {
+  background: #bcbcbc;
+}
+body.dark-mode .xp-progress {
+  background: var(--color-secondary);
+}
+
+/* Exemplo: Ajuste do overlay no dark, caso queira */
+body.dark-mode .overlay {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+body.dark-mode .intro-content p {
+  color: rgba(240, 248, 255, 0.685);
+}
+body.dark-mode .intro-content h2 {
+  color: #fff;
+}
+
+body.dark-mode .habits-header h2 {
+  color: #e7e7e7;
+}
+
+body.dark-mode #resetButton {
+  color: #acacac;
+}
+
+body.dark-mode .xp-title {
+  color: #a3c3ee;
+}
+
+body.dark-mode .xp-values {
+  color: #9d9d9d;
+}
+
+body.dark-mode .rewards-highlight {
+  background: #16284bcc;
+  border: 1px solid #8282822e;
+  border-radius: 12px;
+}
+
+body.dark-mode .rewards-list li {
+  background: #101010;
+  border: 2px solid #4a6fa1;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+body.dark-mode .rewards-highlight h3 {
+  color: #dfdfdf;
+}
+
+body.dark-mode .rewards-system-section h2 {
+  color: #82ade7;
+}
+
+body.dark-mode .healthy-habits-section h2 {
+  color: #82ade7;
+}
+
+body.dark-mode .healthy-habits-section h3 {
+  color: #7fa6da;
+}
+
+body.dark-mode .links-section h2 {
+  color: #9cc6ff;
+}
+
+body.dark-mode .progress-section h3 {
+  color: #accfff;
+  font-weight: 600;
+}
+
+body.dark-mode .card {
+  background: #151515;
+}
+
+body.dark-mode .card .h1 {
+  color: #7f9cc4;
+}
+
+body.dark-mode .card .span {
+  color: #d9b85e;
+}
+
+body.dark-mode .card .p {
+  color: rgb(156 156 156 / 90%);
+}
+
+body.dark-mode #saveHabitBtn{
+    background: #518bda;
+    color: #fdfdfd;
+}
+
+body.dark-mode .hr-central {
+  background: linear-gradient(
+    to right,
+    rgba(241, 241, 241, 0) 0%,
+    rgba(216, 216, 216, 0.2) 50%,
+    rgba(216, 216, 216, 0) 100%
+  );
+}
+
+body.dark-mode .links-section {
+  background: linear-gradient(
+    145deg,
+    rgba(30, 30, 30, 1) 0%,
+    /* Tom escuro para profundidade */ rgba(40, 40, 40, 1) 40%,
+    /* Transição para tom intermediário */ rgba(0, 0, 0, 0.2) 100%
+      /* Leve brilho no final */
+  );
+}
+
+body.dark-mode .desktop-message-content p{
+    color: #101010;
+}
+
+/* ========== ESTILIZAÇÃO DO BOTÃO (lua/sol) ========== */
+/* Botão para alternar tema fixado */
+.theme-toggle-btn {
+  position: absolute; /* Fixed: Fixa o botão no viewport */
+  top: 0; /* Grudado no topo */
+  right: 0; /* Grudado à direita */
+  width: 50px;
+  height: 50px;
+  background: var(--color-primary, #4a6fa1); /* Cor principal */
+  color: var(--color-white, #fff); /* Cor do ícone */
+  border: none;
+  border-radius: 0 0 10px 10px; /* Bordas arredondadas somente embaixo */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Sombra leve */
+  z-index: 1000; /* Fica acima de outros elementos */
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+/* Ícone dentro do botão */
+.theme-toggle-btn i {
+  font-size: 1.4rem; /* Tamanho do ícone */
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+/* Modo claro ajustado */
+body.light-mode .theme-toggle-btn {
+  background: var(--color-secondary, #fbc531);
+  color: var(--color-primary, #4a6fa1);
+}
+
+/* Modo escuro ajustado */
+body.dark-mode .theme-toggle-btn {
+  background: var(--color-secondary, #fbc531);
+  color: #333;
+}
