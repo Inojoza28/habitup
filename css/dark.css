@@ -257,6 +257,10 @@ body.dark-mode .styled-icon {
   transition: all 0.3s ease; /* Transição para interatividade */
 }
 
+body.dark-mode .simple-footer {
+  background-color: #4a6fa194;
+}
+
 /* ========== ESTILIZAÇÃO DO BOTÃO (lua/sol) ========== */
 /* Botão para alternar tema fixado */
 .theme-toggle-btn {
