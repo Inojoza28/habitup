@@ -98,6 +98,10 @@ body.dark-mode .welcome-modal-content h3 {
   color: #82ade7;
 }
 
+body.dark-mode .close-btn {
+  color: #accfff;
+}
+
 /* Ajustando cor do header no dark */
 body.dark-mode .header {
   background: #2f2f2f;

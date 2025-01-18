@@ -827,6 +827,22 @@ img {
   margin-bottom: 0.4rem;
 }
 
+.close-btn {
+  position: absolute;
+  top: 12px; /* Ajuste conforme necessário */
+  right: 14px; /* Ajuste conforme necessário */
+  background: none;
+  border: none;
+  font-size: 1.5rem; /* Tamanho do "X" */
+  color: #4a6fa1; /* Cor do "X" */
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.close-btn:hover {
+  color: #e84118; /* Cor ao passar o mouse */
+}
+
 /* Modal de parabéns */
 .congrats-modal {
   position: fixed;
