@@ -340,7 +340,7 @@ img {
 
 .styled-icon {
   font-size: 21px; /* Aumenta o tamanho do ícone */
-  color: #0d0e0d; /* Cor do ícone */
+  color: #212121; /* Cor do ícone */
   text-shadow: 1px 0px 0 #01600f, -0px -0px 0 #01600f;
   transform: scale(1.1); /* Escala o ícone para parecer mais grosso */
   border-radius: 50%; /* Deixa o ícone circular */
