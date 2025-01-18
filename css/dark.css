@@ -241,7 +241,7 @@ body.dark-mode .mascot-container img {
   animation: popIn 0.4s ease;
 
   /* Ajuste do contorno branco */
-  filter: drop-shadow(0 0 1.4px white) drop-shadow(0 0 1.4px white);
+  filter: drop-shadow(0 0 2px white) drop-shadow(0 0 2px white);
 
   /* Reduz o tamanho visual causado pelo filtro */
   transform: scale(0.95); /* Encolhe levemente para caber no container */
