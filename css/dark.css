@@ -227,6 +227,13 @@ body.dark-mode .desktop-message-content p {
   color: #101010;
 }
 
+body.dark-mode #mascotImg{
+  width: 100px; /* Ajuste conforme necessário */
+  height: auto;
+  filter: drop-shadow(0 0 2px white) drop-shadow(0 0 2px white);
+}
+
+
 /* ========== ESTILIZAÇÃO DO BOTÃO (lua/sol) ========== */
 /* Botão para alternar tema fixado */
 .theme-toggle-btn {
