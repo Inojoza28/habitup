@@ -264,7 +264,7 @@ body.dark-mode .simple-footer {
 /* ========== ESTILIZAÇÃO DO BOTÃO (lua/sol) ========== */
 /* Botão para alternar tema fixado */
 .theme-toggle-btn {
-  position: absolute; /* Fixed: Fixa o botão no viewport */
+  position: absolute; /* Fixa o botão no viewport */
   top: 0; /* Grudado no topo */
   right: 0; /* Grudado à direita */
   width: 50px;
@@ -279,13 +279,27 @@ body.dark-mode .simple-footer {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Sombra leve */
   z-index: 1000; /* Fica acima de outros elementos */
   cursor: pointer;
-  transition: background 0.3s ease, transform 0.3s ease;
+  opacity: 0; /* Começa invisível */
+  transform: translateY(-100%); /* Posicionado fora da tela */
+  animation: slideIn 0.8s ease forwards; /* Aplica a animação */
 }
 
 /* Ícone dentro do botão */
 .theme-toggle-btn i {
   font-size: 1.4rem; /* Tamanho do ícone */
   transition: color 0.3s ease, transform 0.3s ease;
+}
+
+/* Animação para o botão aparecer suavemente */
+@keyframes slideIn {
+  0% {
+    transform: translateY(-100%); /* Fora da tela */
+    opacity: 0; /* Invisível */
+  }
+  100% {
+    transform: translateY(0); /* Posição final */
+    opacity: 1; /* Totalmente visível */
+  }
 }
 
 /* Modo claro ajustado */
