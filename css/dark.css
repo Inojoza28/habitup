@@ -66,6 +66,10 @@ body.dark-mode .habit-item:hover {
   background: #3a3a3a;
 }
 
+body.dark-mode .habit-item::before{
+  color: #ababab;
+}
+
 body.dark-mode .habit-item.completed-today {
   background: #4e5f4a;
   border-color: #9ff193;
