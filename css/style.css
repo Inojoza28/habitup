@@ -1296,7 +1296,7 @@ hr {
 
 /* ========== MEDIA QUERIES ========== */
 /* Se a largura for acima de 720px, exibimos a mensagem e ocultamos a aplicação */
-@media (min-width: 721px) {
+@media (min-width: 1025px) {
   body {
     background: #555;
   }
@@ -1314,7 +1314,7 @@ hr {
 }
 
 /* Para telas até 720px, exibimos a aplicação normalmente */
-@media (max-width: 720px) {
+@media (max-width: 1024px) {
   .desktop-message {
     display: none;
   }
