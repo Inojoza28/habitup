@@ -38,7 +38,7 @@ O **HabitUp** é um rastreador de hábitos gamificado projetado para tornar o de
 - **Frontend:** HTML, CSS e JavaScript.
 - **LocalStorage:** Para persistência de dados do usuário, como hábitos, progresso e preferências de tema.
 - **Animações e Interatividade:** Confetes, efeitos de fade e animações no botão de troca de tema.
-- **Responsividade:** Layout adaptado para dispositivos móveis (até 720px)
+- **Responsividade:** Layout adaptado para dispositivos móveis (até 1024px)
 
 ## 🚀 Como Funciona?
 
